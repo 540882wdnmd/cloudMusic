@@ -1,5 +1,6 @@
 package com.example.cloudmusic.utils.webs
 
+import com.example.cloudmusic.utils.webs.WebConstant.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -7,11 +8,11 @@ import java.util.concurrent.TimeUnit
 
 object ServiceCreator {
 
-    private const val BASE_URL = "http://10.24.2.193:3000/"
+    private const val TIME_OUT = 30.toLong()
 
     private val client = OkHttpClient.Builder()
-        .readTimeout(30, TimeUnit.SECONDS)
-        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(TIME_OUT, TimeUnit.SECONDS)
+        .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
         .build()
 
     private val retrofit = Retrofit.Builder()
