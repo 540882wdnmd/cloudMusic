@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_recommend"
+        android:icon="@drawable/ico_recommend_black"
+        android:title="Recommend" />
+
+    <item
+        android:id="@+id/navigation_discover"
+        android:icon="@drawable/ico_discover_black"
+        android:title="Discover" />
+
+    <item
+        android:id="@+id/navigation_roam"
+        android:icon="@drawable/ico_roam_black"
+        android:title="Roam" />
+
+    <item
+        android:id="@+id/navigation_dynamic"
+        android:icon="@drawable/ico_dynamic_black"
+        android:title="Dynamic" />
+
+    <item
+        android:id="@+id/navigation_mine"
+        android:enabled="true"
+        android:icon="@drawable/ico_mine_black"
+        android:title="Mine" />
+</menu>

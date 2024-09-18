@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".CentreActivity">
+
+        <include
+            android:id="@+id/app_bar_main"
+            layout="@layout/app_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <FrameLayout
+            android:layout_width="320dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/drawer_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.example.cloudmusic.centre.login.LoginFragment" />
+
+        </FrameLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+</layout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/navigation_recommend">
+
+    <fragment
+        android:id="@+id/navigation_recommend"
+        android:name="com.example.cloudmusic.centre.recommend.RecommendFragment"
+        android:label="Recommend"
+        tools:layout="@layout/fragment_recommend"/>
+
+    <fragment
+        android:id="@+id/navigation_discover"
+        android:name="com.example.cloudmusic.centre.discover.DiscoverFragment"
+        android:label="Discover"
+        tools:layout="@layout/fragment_discover"/>
+
+    <fragment
+        android:id="@+id/navigation_roam"
+        android:name="com.example.cloudmusic.centre.roam.RoamFragment"
+        android:label="Roam"
+        tools:layout="@layout/fragment_roam"/>
+
+    <fragment
+        android:id="@+id/navigation_dynamic"
+        android:name="com.example.cloudmusic.centre.dynamic.DynamicFragment"
+        android:label="Dynamic"
+        tools:layout="@layout/fragment_dynamic"/>
+
+    <fragment
+        android:id="@+id/navigation_mine"
+        android:name="com.example.cloudmusic.centre.mine.MineFragment"
+        android:label="Mine"
+        tools:layout="@layout/fragment_mine"/>
+
+
+</navigation>
