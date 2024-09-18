@@ -51,6 +51,8 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+
 }
 
 dependencies {
@@ -60,7 +62,6 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.room.room.runtime3)
-    implementation(libs.androidx.room.room.compiler3)
     implementation(libs.com.github.bumptech.glide.glide3)
 
     implementation(libs.androidx.core.ktx)

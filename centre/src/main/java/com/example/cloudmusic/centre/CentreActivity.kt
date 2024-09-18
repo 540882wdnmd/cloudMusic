@@ -20,7 +20,6 @@ import com.example.cloudmusic.centre.databinding.ActivityCentreBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class CentreActivity : AppCompatActivity() {
-    private val TAG : String = "MainActivity"
 
     private lateinit var binding : ActivityCentreBinding
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
@@ -31,7 +30,6 @@ class CentreActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         binding  = ActivityCentreBinding.inflate(layoutInflater)
         setContentView(binding.root)//绑定布局

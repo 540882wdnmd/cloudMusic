@@ -1,21 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".centre.login.LoginFragment">
+        tools:context=".centre.login.LoginFragment"
+        android:background="@color/white">
 
-        <TextView
-            android:id="@+id/text_login"
+
+    <androidx.cardview.widget.CardView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="100dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:cardCornerRadius="90dp"
+        app:cardElevation="10dp"
+        android:id="@+id/card_view_head_image"
+        app:cardPreventCornerOverlap="true">
+
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="This is login fragemnt" />
+            android:id="@+id/users_head_image"
+            android:src="@drawable/ico_mine_black"
+            android:background="@color/rose"
+            android:scaleType="center"/>
 
-    </FrameLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/input_layout_user_phone"
+        app:layout_constraintTop_toBottomOf="@id/card_view_head_image"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_text_user_phone"
+            android:hint="电话号码"
+            android:maxLines="1"
+            android:inputType="number"/>
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/input_layout_user_password"
+        app:layout_constraintTop_toBottomOf="@id/input_layout_user_phone"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_text_user_password"
+            android:hint="密码"
+            android:maxLines="1"
+            android:inputType="textPassword"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_login"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_layout_user_password"
+            android:layout_marginTop="18sp"
+            android:textColor="@color/black"
+            android:background="@drawable/round_corner"
+            android:text="登录"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
