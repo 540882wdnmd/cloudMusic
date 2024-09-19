@@ -1,6 +1,17 @@
 package com.example.cloudmusic.utils.webs.bean.response
 
-data class Login(
-    val loginType : Int,
+import android.os.Message
 
+
+data class LoginResponse(
+    val loginType : Int,
+    val code : Int,
+    val token : String,
+    val profile : LoginProfile,
+    val cookie : String
+)
+
+data class LoginProfile(
+    val nickname : String,
+    val avatarUrl : String,
 )

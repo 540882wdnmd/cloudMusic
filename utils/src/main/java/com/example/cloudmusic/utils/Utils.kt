@@ -3,6 +3,8 @@ package com.example.cloudmusic.utils
 import android.app.Activity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
+import okhttp3.ResponseBody
 
 const val SECOND_TIME = 1000L
 const val MINUTE_TIME = 60 * SECOND_TIME
@@ -20,5 +22,11 @@ val Fragment.TAG
 val ViewModel.TAG
     get() = this::class.simpleName!!
 
-
+inline fun <reified T> convertErrorBody(responseErrorBody : ResponseBody?) : T?{
+    runCatching {
+        return Gson().fromJson(responseErrorBody!!.string(), T::class.java)
+    }
+    //异常不做处理
+    return null
+}
 

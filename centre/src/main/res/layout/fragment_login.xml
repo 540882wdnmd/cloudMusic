@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".centre.login.LoginFragment"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:theme="@style/Theme.Material3.Light">
 
 
     <androidx.cardview.widget.CardView
@@ -23,13 +24,13 @@
         android:layout_height="150dp"
         app:cardCornerRadius="90dp"
         app:cardElevation="10dp"
-        android:id="@+id/card_view_head_image"
+        android:id="@+id/card_view_avatar_image"
         app:cardPreventCornerOverlap="true">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/users_head_image"
+            android:id="@+id/users_avatar_image"
             android:src="@drawable/ico_mine_black"
             android:background="@color/rose"
             android:scaleType="center"/>
@@ -40,10 +41,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/input_layout_user_phone"
-        app:layout_constraintTop_toBottomOf="@id/card_view_head_image"
+        app:layout_constraintTop_toBottomOf="@id/card_view_avatar_image"
         android:layout_marginTop="50dp"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="70dp">
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:background="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -62,8 +64,9 @@
         android:id="@+id/input_layout_user_password"
         app:layout_constraintTop_toBottomOf="@id/input_layout_user_phone"
         android:layout_marginTop="18dp"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="70dp">
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:background="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -71,7 +74,8 @@
             android:id="@+id/edit_text_user_password"
             android:hint="密码"
             android:maxLines="1"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,7 +88,7 @@
             app:layout_constraintTop_toBottomOf="@id/input_layout_user_password"
             android:layout_marginTop="18sp"
             android:textColor="@color/black"
-            android:background="@drawable/round_corner"
+            android:backgroundTint="@color/rose"
             android:text="登录"/>
 
 

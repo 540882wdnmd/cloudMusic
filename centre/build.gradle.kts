@@ -57,6 +57,10 @@ android {
 
 dependencies {
 
+    implementation(project(":utils"))
+
+    implementation(libs.com.squareup.retrofit2.retrofit2)
+    implementation(libs.com.squareup.retrofit2.converter.gson2)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation( libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)

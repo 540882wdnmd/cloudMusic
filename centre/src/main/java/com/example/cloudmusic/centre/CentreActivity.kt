@@ -58,8 +58,6 @@ class CentreActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController,appBarConfigurationBottom)
         bottomNavView.setupWithNavController(navController)
 
-//        //简易播放器部分
-//        initSimpleMusicPlayerView()
     }
 
 
@@ -86,30 +84,5 @@ class CentreActivity : AppCompatActivity() {
         }
         return super.onKeyDown(keyCode, event)
     }
-//    private fun initSimpleMusicPlayerView(){
-//        simpleMusicPlayerView = binding.appBarMain.contentMain.viewSimpleMusicPlayer
-//        simpleMusicPlayerView.root.setOnClickListener {
-//            MusicPlayerBottomSheetDialogFragment().show(supportFragmentManager,"MusicPlayerBottomSheetDialogFragment")
-//        }
-//
-//        musicPlayingButton = simpleMusicPlayerView.startPauseButton
-//        nextMusicButton = simpleMusicPlayerView.nextMusicButton
-//
-//        mainViewModel.songPicLiveData.observe(this) {
-//            Log.e(TAG, it)
-//            Picasso.get().load(it).into(simpleMusicPlayerView.songPic)
-//        }
-//        mainViewModel.songNameLiveData.observe(this) {
-//            Log.e(TAG, it)
-//            simpleMusicPlayerView.songPlayingName.text = it
-//        }
-//
-//        musicPlayingButton.setOnClickListener {
-//
-//        }
-//        nextMusicButton.setOnClickListener {
-//
-//        }
-//    }
 
 }
