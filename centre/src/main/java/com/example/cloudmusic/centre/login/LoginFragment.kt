@@ -19,7 +19,6 @@ import com.google.android.material.textfield.TextInputLayout
 
 class LoginFragment : Fragment() {
 
-
     private lateinit var avatarImage : ImageView
     private lateinit var phoneEditText: EditText
     private lateinit var passwordEditText: EditText

@@ -18,8 +18,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.cloudmusic.centre.databinding.ActivityCentreBinding
+import com.example.cloudmusic.utils.base.BaseApplication
 import com.example.cloudmusic.utils.hideKeyboard
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.lang.ref.WeakReference
 
 class CentreActivity : AppCompatActivity() {
 
@@ -32,6 +34,7 @@ class CentreActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        BaseApplication.activity = WeakReference(this)
 
         binding  = ActivityCentreBinding.inflate(layoutInflater)
         setContentView(binding.root)//绑定布局
