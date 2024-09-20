@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.widget.ImageButton
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.cloudmusic.centre.databinding.ActivityCentreBinding
+import com.example.cloudmusic.utils.hideKeyboard
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class CentreActivity : AppCompatActivity() {
@@ -83,6 +85,13 @@ class CentreActivity : AppCompatActivity() {
             }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev != null) {
+            hideKeyboard(ev,null)
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
 }
