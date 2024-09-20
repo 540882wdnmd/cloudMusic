@@ -10,7 +10,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.example.cloudmusic.utils.datastore.getStringData
+import com.example.cloudmusic.utils.datastore.preferenceCookie
 import com.google.gson.Gson
+import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
 
 /**
@@ -104,3 +107,9 @@ fun isShouldHideInput(view: View,event:MotionEvent):Boolean{
     return false;
 }
 
+/**
+ * 获取Cookie
+ */
+fun getCookie() = runBlocking {
+    getStringData(preferenceCookie)
+}

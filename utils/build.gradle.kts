@@ -36,6 +36,8 @@ dependencies {
 
     implementation(libs.com.squareup.retrofit2.retrofit2)
     implementation(libs.com.squareup.retrofit2.converter.gson2)
+    implementation(libs.androidx.datastore.preferences.v110beta02)
+    implementation(libs.androidx.constraintlayout)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

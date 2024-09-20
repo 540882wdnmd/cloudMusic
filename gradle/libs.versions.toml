@@ -5,6 +5,8 @@ comSquareupRetrofit2Retrofit = "2.9.0"
 androidxRoomRoomRuntime = "2.6.0"
 androidxRoomRoomCompiler = "2.6.0"
 comGithubBumptechGlideGlide = "4.16.0"
+datastorePreferences = "1.0.0"
+datastorePreferencesVersion = "1.1.0-beta02"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -21,6 +23,8 @@ navigationUi = "2.7.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-datastore-preferences-v110beta02 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferencesVersion" }
 androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "navigationUi" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
