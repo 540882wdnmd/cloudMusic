@@ -6,10 +6,11 @@ import com.example.cloudmusic.utils.webs.bean.response.LoginResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface LoginService {
 
     @POST(API_LOGIN)
-    fun getLoginResponse(@Body user: User): Call<LoginResponse>
+    fun getLoginResponse(@Query("phone") phone : String, @Query("password") password: String): Call<LoginResponse>
 
 }

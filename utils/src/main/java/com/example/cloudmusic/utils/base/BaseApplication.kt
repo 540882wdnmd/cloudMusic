@@ -15,7 +15,7 @@ class BaseApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appContext = this
+        appContext = this@BaseApplication
         cookie = getCookie()
     }
 }

@@ -27,3 +27,4 @@ rootProject.name = "cloudMusic"
 include(":app")
 include(":centre")
 include(":utils")
+
