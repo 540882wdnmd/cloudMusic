@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.androidx.room.room.runtime3)
     implementation(libs.com.github.bumptech.glide.glide3)
     implementation(libs.junit)
+    implementation(libs.banner)
 
 
     implementation(libs.androidx.core.ktx)
