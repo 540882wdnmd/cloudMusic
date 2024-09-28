@@ -10,7 +10,9 @@ import com.example.cloudmusic.utils.convertErrorBody
 import com.example.cloudmusic.utils.webs.bean.data.Account
 import com.example.cloudmusic.utils.webs.bean.response.LoginResponse
 import com.example.cloudmusic.utils.webs.bean.response.LogoutResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,8 +29,8 @@ class LoginViewModel : ViewModel() {
     val logoutResponse : LiveData<LogoutResponse?>
         get() = _logoutResponse
 
-    private val _loginStatus = MutableLiveData<Boolean>()
-    val loginStatus : LiveData<Boolean>
+    private val _loginStatus = MutableLiveData<Boolean?>()
+    val loginStatus : LiveData<Boolean?>
         get() = _loginStatus
 
 
@@ -36,7 +38,7 @@ class LoginViewModel : ViewModel() {
         loginModel.loginRequest(phone,password,object : Callback<LoginResponse>{
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 _loginResponse.value = if (response.isSuccessful){
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.Default){
                         loginModel.saveUserInfo(phone,password)
                     }
                     response.body()
@@ -75,20 +77,19 @@ class LoginViewModel : ViewModel() {
 
 
     fun getLoginStatus() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main){
             _loginStatus.value = loginModel.getLoginStatus()
-            Log.e(TAG,_loginStatus.value.toString())
         }
     }
 
     fun saveAccountInfo(account: Account){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO){
             loginModel.saveAccountInfo(account)
         }
     }
 
     fun clearAccountInfo(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO){
             loginModel.clearAccountInfo()
         }
     }

@@ -80,6 +80,7 @@ class LoginFragment : Fragment() {
         observe()
         init()
         loginButton.setOnClickListener {
+            loginViewModel.getLoginStatus()
             Log.d(TAG,loginStatus.toString())
             if (!loginStatus){
                 loginViewModel.loginRequest(phoneEditText.text.toString(), passwordEditText.text.toString())
@@ -117,7 +118,26 @@ class LoginFragment : Fragment() {
         }
 
         loginViewModel.loginStatus.observe(viewLifecycleOwner){
-            loginStatus = it
+            if (it != null) {
+                loginStatus = it
+            }
+        }
+    }
+
+    private fun init(){
+        loginViewModel.getLoginStatus()
+        if (loginStatus){
+            loginViewModel.viewModelScope.launch(Dispatchers.Main) {
+                dataStoreInstance.edit {
+                    it[preferenceNickname]?.let { it1 -> it[preferenceAvatar]?.let { it2 ->
+                        loginUI(it1,
+                            it2
+                        )
+                    } }
+                }
+            }
+        }else{
+            logout()
         }
     }
 
@@ -134,22 +154,6 @@ class LoginFragment : Fragment() {
     private fun logout(){
         loginViewModel.clearAccountInfo()
         logoutUI()
-    }
-
-    private fun init(){
-        if (loginStatus){
-            loginViewModel.viewModelScope.launch {
-                dataStoreInstance.edit {
-                    it[preferenceNickname]?.let { it1 -> it[preferenceAvatar]?.let { it2 ->
-                        loginUI(it1,
-                            it2
-                        )
-                    } }
-                }
-            }
-        }else{
-            logout()
-        }
     }
 
     private fun loginUI(nickname:String,avatarUrl: String){
@@ -174,6 +178,8 @@ class LoginFragment : Fragment() {
         nicknameTextView.visibility = View.GONE
         nicknameTextView.visibility = View.GONE
 
+        phoneEditText.text = null
+        passwordEditText.text = null
         phoneInputLayout.visibility = View.VISIBLE
         passwordInputLayout.visibility = View.VISIBLE
 

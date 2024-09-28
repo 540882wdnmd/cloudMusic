@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.cloudmusic.utils.base.BaseApplication
@@ -16,7 +15,7 @@ import kotlinx.coroutines.flow.map
 //PreferenceDataStore 文件名
 private const val PREFERENCE_NAME : String = "data_preferences"
 
-//获取 DataStore 实例
+//获取 DataStore 实例(拓展属性)
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PREFERENCE_NAME)
 
 /**
@@ -54,10 +53,6 @@ val preferenceStatus = booleanPreferencesKey("status")
  */
 val preferenceCookie = stringPreferencesKey("cookie")
 
-/**
- * 上一次 cookie 获取/刷新的时间
- */
-val preferenceLastCookieTime = longPreferencesKey("lastCookieTime")
 
 /**
  * 插入字符串型值元素到 DataStore 中

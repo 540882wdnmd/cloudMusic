@@ -44,8 +44,8 @@ class LoginModel {
     suspend fun saveAccountInfo(account: Account){
         putStringData(preferenceNickname,account.nickname)
         putStringData(preferenceAvatar,account.avatarUrl)
-        putStringData(preferenceCookie,account.cookie)
         putBooleanData(preferenceStatus,account.loginStatus)
+        putStringData(preferenceCookie,account.cookie)
     }
 
     /**
@@ -70,7 +70,7 @@ class LoginModel {
         putStringData(preferencePassword,"")
         putStringData(preferenceNickname,"")
         putStringData(preferenceAvatar,"")
-        putStringData(preferenceCookie,"")
         putBooleanData(preferenceStatus,false)
+        putStringData(preferenceCookie,"")
     }
 }
