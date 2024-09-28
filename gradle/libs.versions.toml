@@ -1,18 +1,23 @@
 [versions]
 agp = "8.5.1"
+androidxDatastorePreferences = "1.1.1"
+banner = "2.2.3"
 comSquareupRetrofit2ConverterGson = "2.9.0"
 comSquareupRetrofit2Retrofit = "2.9.0"
 androidxRoomRoomRuntime = "2.6.0"
 androidxRoomRoomCompiler = "2.6.0"
 comGithubBumptechGlideGlide = "4.16.0"
-datastorePreferences = "1.0.0"
-datastorePreferencesVersion = "1.1.0-beta02"
+coreKtxVersion = "1.12.0"
+datastorePreferencesCore = "1.1.1"
+datastorePreferencesRxjava3 = "1.1.1"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
+kotlinxCoroutinesAndroid = "1.7.3"
+kotlinxCoroutinesCore = "1.7.0"
 lifecycleViewmodelKtx = "2.8.3"
 lifecycleRuntimeKtx = "2.8.3"
 material = "1.10.0"
@@ -20,17 +25,20 @@ activity = "1.8.0"
 constraintlayout = "2.1.4"
 navigationFragmentKtx = "2.7.7"
 navigationUi = "2.7.7"
+jetbrainsKotlinJvm = "1.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
-androidx-datastore-preferences-v110beta02 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferencesVersion" }
+androidx-core-ktx-v1120 = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
+androidx-datastore-preferences-rxjava2 = { module = "androidx.datastore:datastore-preferences-rxjava2", version.ref = "androidxDatastorePreferences" }
+androidx-datastore-preferences-rxjava3 = { module = "androidx.datastore:datastore-preferences-rxjava3", version.ref = "datastorePreferencesRxjava3" }
+androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferencesCore" }
 androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "navigationUi" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+banner = { module = "io.github.youth5201314:banner", version.ref = "banner" }
 com-github-bumptech-glide-glide3 = { module = "com.github.bumptech.glide:glide", version.ref = "comGithubBumptechGlideGlide" }
-androidx-room-room-compiler3 = { module = "androidx.room:room-compiler", version.ref = "androidxRoomRoomCompiler" }
 androidx-room-room-runtime3 = { module = "androidx.room:room-runtime", version.ref = "androidxRoomRoomRuntime" }
 com-squareup-retrofit2-retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "comSquareupRetrofit2Retrofit" }
 com-squareup-retrofit2-converter-gson2 = { module = "com.squareup.retrofit2:converter-gson", version.ref = "comSquareupRetrofit2ConverterGson" }
@@ -38,12 +46,14 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 

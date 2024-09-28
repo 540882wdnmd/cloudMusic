@@ -10,7 +10,9 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven {
-            url=uri("https://jitpack.io") }
+            url=uri("https://jitpack.io")
+            url=uri("https://s01.oss.sonatype.org/content/groups/public")
+        }
     }
 }
 dependencyResolutionManagement {
@@ -19,7 +21,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven {
-            url=uri("https://jitpack.io") }
+            url=uri("https://jitpack.io")
+            url=uri("https://s01.oss.sonatype.org/content/groups/public")
+        }
     }
 }
 
@@ -27,3 +31,4 @@ rootProject.name = "cloudMusic"
 include(":app")
 include(":centre")
 include(":utils")
+

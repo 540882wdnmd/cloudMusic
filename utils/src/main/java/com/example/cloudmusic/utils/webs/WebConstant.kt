@@ -13,4 +13,32 @@ object WebConstant {
     object Login{
         const val API_LOGIN = "login/cellphone"
     }
+
+    /**
+     * 登出的接口地址
+     */
+    object Logout{
+        const val API_LOGOUT = "logout"
+    }
+
+    /**
+     * 获取音乐Url
+     */
+    object MusicUrl{
+        const val API_MUSIC_URL = "song/url"
+    }
+
+    /**
+     * 每日推荐歌曲
+     */
+    object DailyRecommendSongs{
+        const val API_DAILY_RECOMMEND_SONGS = "recommend/songs"
+    }
+
+    /**
+     * Banner
+     */
+    object Banner{
+        const val API_BANNER = "banner"
+    }
 }
