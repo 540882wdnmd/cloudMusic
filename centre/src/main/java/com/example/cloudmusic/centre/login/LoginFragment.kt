@@ -145,8 +145,8 @@ class LoginFragment : Fragment() {
         loginViewModel.saveAccountInfo(Account(
             loginResponse.profile.avatarUrl,
             loginResponse.profile.nickname,
+            true,
             loginResponse.cookie,
-            true
         ))
         loginUI(loginResponse.profile.nickname,loginResponse.profile.avatarUrl)
     }

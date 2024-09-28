@@ -71,6 +71,6 @@ class LoginModel {
         putStringData(preferenceNickname,"")
         putStringData(preferenceAvatar,"")
         putBooleanData(preferenceStatus,false)
-        putStringData(preferenceCookie,"")
+
     }
 }
