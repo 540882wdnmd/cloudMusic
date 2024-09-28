@@ -34,4 +34,11 @@ object WebConstant {
     object DailyRecommendSongs{
         const val API_DAILY_RECOMMEND_SONGS = "recommend/songs"
     }
+
+    /**
+     * Banner
+     */
+    object Banner{
+        const val API_BANNER = "banner"
+    }
 }
