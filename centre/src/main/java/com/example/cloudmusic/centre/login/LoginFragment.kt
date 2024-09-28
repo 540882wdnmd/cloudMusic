@@ -14,6 +14,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.transition.Visibility
 import com.bumptech.glide.Glide
 import com.example.cloudmusic.centre.R
@@ -30,6 +31,7 @@ import com.example.cloudmusic.utils.datastore.preferenceStatus
 import com.example.cloudmusic.utils.datastore.putBooleanData
 import com.example.cloudmusic.utils.datastore.putStringData
 import com.example.cloudmusic.utils.toast
+import com.example.cloudmusic.utils.webs.bean.data.Account
 import com.example.cloudmusic.utils.webs.bean.response.LoginResponse
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
@@ -120,30 +122,23 @@ class LoginFragment : Fragment() {
     }
 
     private fun login(loginResponse: LoginResponse){
-        lifecycleScope.launch {
-            putStringData(preferenceNickname,loginResponse.profile.nickname)
-            putStringData(preferenceAvatar,loginResponse.profile.avatarUrl)
-            putStringData(preferenceCookie,loginResponse.cookie)
-            putBooleanData(preferenceStatus,true)
-        }
+        loginViewModel.saveAccountInfo(Account(
+            loginResponse.profile.avatarUrl,
+            loginResponse.profile.nickname,
+            loginResponse.cookie,
+            true
+        ))
         loginUI(loginResponse.profile.nickname,loginResponse.profile.avatarUrl)
     }
 
     private fun logout(){
-        lifecycleScope.launch {
-            putStringData(preferencePhone,"")
-            putStringData(preferencePassword,"")
-            putStringData(preferenceNickname,"")
-            putStringData(preferenceAvatar,"")
-            putStringData(preferenceCookie,"")
-            putBooleanData(preferenceStatus,false)
-        }
+        loginViewModel.clearAccountInfo()
         logoutUI()
     }
 
     private fun init(){
         if (loginStatus){
-            lifecycleScope.launch {
+            loginViewModel.viewModelScope.launch {
                 dataStoreInstance.edit {
                     it[preferenceNickname]?.let { it1 -> it[preferenceAvatar]?.let { it2 ->
                         loginUI(it1,

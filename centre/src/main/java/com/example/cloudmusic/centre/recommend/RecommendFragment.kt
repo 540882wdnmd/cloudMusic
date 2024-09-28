@@ -7,9 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.cloudmusic.centre.databinding.FragmentRecommendBinding
-import com.example.cloudmusic.utils.webs.bean.data.BannerImage
-import com.example.cloudmusic.centre.recommend.BannerImageAdapter
-import com.youth.banner.Banner
 
 class RecommendFragment :Fragment() {
 
@@ -25,17 +22,20 @@ class RecommendFragment :Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentRecommendBinding.inflate(inflater,container,false)
         val rootView = binding.root
 
-        bannerImageAdapter = BannerImageAdapter(recommendViewModel.bannerImage.value)
-//        val banner = Banner<BannerImage>
-//        with(binding){
-//            banner = bannerRecommend
-//        }
-
+        val banner = binding.bannerRecommend
+        recommendViewModel.bannerImage.observe(viewLifecycleOwner){
+            bannerImageAdapter = BannerImageAdapter(recommendViewModel.bannerImage.value)
+            banner.setAdapter(bannerImageAdapter)
+        }
         return rootView
+    }
+
+    private fun observe(){
+
     }
 
 }

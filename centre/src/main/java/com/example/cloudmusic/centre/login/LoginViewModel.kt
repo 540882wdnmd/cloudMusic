@@ -1,20 +1,15 @@
 package com.example.cloudmusic.centre.login
 
 import android.util.Log
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cloudmusic.utils.TAG
 import com.example.cloudmusic.utils.convertErrorBody
-import com.example.cloudmusic.utils.datastore.dataStoreInstance
-import com.example.cloudmusic.utils.datastore.getStringData
-import com.example.cloudmusic.utils.datastore.preferencePhone
+import com.example.cloudmusic.utils.webs.bean.data.Account
 import com.example.cloudmusic.utils.webs.bean.response.LoginResponse
 import com.example.cloudmusic.utils.webs.bean.response.LogoutResponse
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -83,6 +78,18 @@ class LoginViewModel : ViewModel() {
         viewModelScope.launch {
             _loginStatus.value = loginModel.getLoginStatus()
             Log.e(TAG,_loginStatus.value.toString())
+        }
+    }
+
+    fun saveAccountInfo(account: Account){
+        viewModelScope.launch {
+            loginModel.saveAccountInfo(account)
+        }
+    }
+
+    fun clearAccountInfo(){
+        viewModelScope.launch {
+            loginModel.clearAccountInfo()
         }
     }
 

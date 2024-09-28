@@ -20,4 +20,18 @@ object WebConstant {
     object Logout{
         const val API_LOGOUT = "logout"
     }
+
+    /**
+     * 获取音乐Url
+     */
+    object MusicUrl{
+        const val API_MUSIC_URL = "song/url"
+    }
+
+    /**
+     * 每日推荐歌曲
+     */
+    object DailyRecommendSongs{
+        const val API_DAILY_RECOMMEND_SONGS = "recommend/songs"
+    }
 }
