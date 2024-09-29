@@ -60,6 +60,10 @@ class LoginFragment : Fragment() {
     private val binding
         get() = _binding!!
 
+    interface Callback{
+        fun getLoginStatus(callLoginStatus : Boolean)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -80,7 +84,7 @@ class LoginFragment : Fragment() {
         observe()
         init()
         loginButton.setOnClickListener {
-            loginViewModel.getLoginStatus()
+            getLoginStatus()
             Log.d(TAG,loginStatus.toString())
             if (!loginStatus){
                 loginViewModel.loginRequest(phoneEditText.text.toString(), passwordEditText.text.toString())
@@ -117,17 +121,12 @@ class LoginFragment : Fragment() {
             }
         }
 
-        loginViewModel.loginStatus.observe(viewLifecycleOwner){
-            if (it != null) {
-                loginStatus = it
-            }
-        }
     }
 
     private fun init(){
-        loginViewModel.getLoginStatus()
+        getLoginStatus()
         if (loginStatus){
-            loginViewModel.viewModelScope.launch(Dispatchers.Main) {
+            lifecycleScope.launch(Dispatchers.Main) {
                 dataStoreInstance.edit {
                     it[preferenceNickname]?.let { it1 -> it[preferenceAvatar]?.let { it2 ->
                         loginUI(it1,
@@ -186,6 +185,14 @@ class LoginFragment : Fragment() {
         avatarImage.setImageResource(R.drawable.ico_mine_black)
 
         loginButton.text = "登录"
+    }
+
+    private fun getLoginStatus(){
+        loginViewModel.getLoginStatus(object : Callback{
+            override fun getLoginStatus(callLoginStatus: Boolean) {
+                loginStatus = callLoginStatus
+            }
+        })
     }
 
 

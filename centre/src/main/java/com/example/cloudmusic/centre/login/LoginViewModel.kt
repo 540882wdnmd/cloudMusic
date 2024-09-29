@@ -18,6 +18,7 @@ import retrofit2.Response
 class LoginViewModel : ViewModel() {
 
     private val loginModel by lazy { LoginModel() }
+    private val loginFragment by lazy { LoginFragment() }
 
     private val _loginResponse = MutableLiveData<LoginResponse?>()
     val loginResponse : LiveData<LoginResponse?>
@@ -26,10 +27,6 @@ class LoginViewModel : ViewModel() {
     private val _logoutResponse = MutableLiveData<LogoutResponse?>()
     val logoutResponse : LiveData<LogoutResponse?>
         get() = _logoutResponse
-
-    private val _loginStatus = MutableLiveData<Boolean?>()
-    val loginStatus : LiveData<Boolean?>
-        get() = _loginStatus
 
 
     fun loginRequest(phone : String,password : String){
@@ -74,9 +71,9 @@ class LoginViewModel : ViewModel() {
     }
 
 
-    fun getLoginStatus() {
+    fun getLoginStatus(callback : LoginFragment.Callback) {
         viewModelScope.launch(Dispatchers.Main){
-            _loginStatus.value = loginModel.getLoginStatus()
+            callback.getLoginStatus(loginModel.getLoginStatus())
         }
     }
 

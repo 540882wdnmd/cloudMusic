@@ -5,7 +5,7 @@ object WebConstant {
     /**
      * Api根地址
      */
-    const val BASE_URL = "http://10.24.2.193:3000/"
+    const val BASE_URL = "http://192.168.65.113:3000"
 
     /**
      * 登录的接口地址
