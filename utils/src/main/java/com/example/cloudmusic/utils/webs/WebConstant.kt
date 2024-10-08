@@ -5,7 +5,7 @@ object WebConstant {
     /**
      * Api根地址
      */
-    const val BASE_URL = "http://192.168.65.113:3000"
+    const val BASE_URL = "http://10.36.65.63:3000"
 
     /**
      * 登录的接口地址
@@ -40,5 +40,12 @@ object WebConstant {
      */
     object Banner{
         const val API_BANNER = "banner"
+    }
+
+    /**
+     * Personalized
+     */
+    object Personalized{
+        const val API_PERSONALIZED = "personalized"
     }
 }

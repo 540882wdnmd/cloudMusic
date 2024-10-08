@@ -7,7 +7,7 @@ import com.example.cloudmusic.utils.webs.bean.response.BannerResponse
 import retrofit2.Call
 import retrofit2.http.Query
 
-interface Banner {
+interface BannerService {
 
     @GET(API_BANNER)
     fun getBanner(@Query("type") int: Int = 1) : Call<BannerResponse>

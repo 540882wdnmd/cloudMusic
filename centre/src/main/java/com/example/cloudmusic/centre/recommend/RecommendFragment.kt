@@ -7,13 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cloudmusic.centre.databinding.FragmentRecommendBinding
+import com.example.cloudmusic.centre.databinding.ItemPersonalizedBinding
 import com.example.cloudmusic.utils.TAG
 import com.example.cloudmusic.utils.toast
 
 class RecommendFragment :Fragment() {
 
     private lateinit var bannerImageAdapter: BannerImageAdapter
+    private lateinit var personalizedAdapter: PersonalizedAdapter
 
     private val recommendViewModel by lazy { ViewModelProvider(this)[RecommendViewModel::class] }
 
@@ -29,6 +32,7 @@ class RecommendFragment :Fragment() {
         _binding = FragmentRecommendBinding.inflate(inflater,container,false)
         val rootView = binding.root
         banner()
+        personalized()
         return rootView
     }
 
@@ -40,7 +44,6 @@ class RecommendFragment :Fragment() {
             if (it != null) {
                 if (it.code==200){
                     bannerImageAdapter.updateBannerList(it.banners)
-                    it.banners?.get(0)?.let { it1 -> Log.d(TAG, it1.pic) }
                 }else if(it.code==400){
                     toast("获取Banner失败")
                 }
@@ -50,6 +53,27 @@ class RecommendFragment :Fragment() {
         }
         recommendViewModel.getBanner()
 
+    }
+
+    private fun personalized(){
+        val personalized = binding.personalizedRecommend
+        val layoutManager = LinearLayoutManager(requireContext())
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        personalized.layoutManager = layoutManager
+        personalizedAdapter = PersonalizedAdapter(null)
+        personalized.adapter = personalizedAdapter
+        recommendViewModel.personalized.observe(viewLifecycleOwner){
+            if (it != null) {
+                if (it.code==200){
+                    personalizedAdapter.updateData(it.result)
+                }else if(it.code==400){
+                    toast("获取Banner失败")
+                }
+            }else{
+                toast("网络链接失败")
+            }
+        }
+        recommendViewModel.getPersonalized()
     }
 
 }

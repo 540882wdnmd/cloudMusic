@@ -1,11 +1,11 @@
 package com.example.cloudmusic.utils.webs.bean.response
 
-data class Personalized (
+data class PersonalizedResponse (
     val code : Int,
-    val result : List<Result>
+    val result : List<PersonalizedResult>
 )
 
-data class Result(
+data class PersonalizedResult(
     val id : String,
     val name : String,
     val picUrl : String

@@ -102,7 +102,7 @@ class LoginFragment : Fragment() {
                 if (it.code==200){
                     login(it)
                 }else if (it.code ==400){
-                    toast("登录失败")
+                    toast(it.message)
                 }
             }else{
                 toast("网络连接错误")

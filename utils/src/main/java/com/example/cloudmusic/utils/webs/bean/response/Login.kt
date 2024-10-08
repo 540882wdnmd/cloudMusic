@@ -6,6 +6,7 @@ import android.os.Message
 data class LoginResponse(
     val loginType : Int,
     val code : Int,
+    val message : String,
     val token : String,
     val profile : LoginProfile,
     val cookie : String
