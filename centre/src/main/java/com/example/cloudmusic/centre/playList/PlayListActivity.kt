@@ -20,6 +20,7 @@ import com.example.cloudmusic.centre.R
 import com.example.cloudmusic.centre.databinding.ActivityPlayListBinding
 import com.example.cloudmusic.utils.PERSONALIZED_ID
 import com.example.cloudmusic.utils.TAG
+import com.example.cloudmusic.utils.base.BaseApplication
 import com.example.cloudmusic.utils.service.MusicServiceOnBind
 import com.example.cloudmusic.utils.toast
 
@@ -132,7 +133,7 @@ class PlayListActivity : AppCompatActivity() {
                 return
             }
         }
-        val intent = Intent(this,MusicServiceOnBind::class.java)
+        val intent = Intent(BaseApplication.appContext,MusicServiceOnBind::class.java)
         bindService(intent,serviceConnection, BIND_AUTO_CREATE)
     }
 

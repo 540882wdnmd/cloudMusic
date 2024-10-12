@@ -18,7 +18,7 @@ import kotlin.properties.Delegates
 class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
     private val mediaPlayer = MediaPlayer()
-    private var currentPosition = 0
+    private var currentPosition = -1
     private val _musicUrlList = MutableLiveData<List<String>?>()
     private var mediaStatus = OK
     init {
@@ -49,11 +49,11 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG,"执行onDestroy")
-        if (mediaPlayer.isPlaying){
-            mediaPlayer.stop()
-        }
-        mediaPlayer.release()
-        stopForeground(STOP_FOREGROUND_REMOVE)
+//        if (mediaPlayer.isPlaying){
+//            mediaPlayer.stop()
+//        }
+//        mediaPlayer.release()
+//        stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
     override fun onBind(p0: Intent?): IBinder {
@@ -122,12 +122,14 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
             mediaPlayer.stop()
             mediaPlayer.reset()
             if (_musicUrlList.value!=null){
-                if (getCurrentPlayPosition()==getPlayListLength()){
-                    currentPosition=1
+                if (getCurrentPlayPosition()==getPlayListLength()-1){
+                    currentPosition=0
                     mediaPlayer.setDataSource(_musicUrlList.value!![0])
                 }else{
-                    mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition++])
+                    mediaPlayer.setDataSource(_musicUrlList.value!![++currentPosition])
                 }
+                mediaPlayer.prepare()
+                mediaPlayer.start()
             }else{
                 Log.e(TAG,"playNext方法出错")
             }
@@ -143,12 +145,14 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
             mediaPlayer.stop()
             mediaPlayer.reset()
             if (_musicUrlList.value!=null){
-                if (getCurrentPlayPosition()==1){
-                    currentPosition=getPlayListLength()
-                    mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition-1])
+                if (getCurrentPlayPosition()==0){
+                    currentPosition=getPlayListLength()-1
+                    mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition])
                 }else{
-                    mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition--])
+                    mediaPlayer.setDataSource(_musicUrlList.value!![--currentPosition])
                 }
+                mediaPlayer.prepare()
+                mediaPlayer.start()
             }else{
                 Log.e(TAG,"playLast方法出错")
             }
@@ -169,9 +173,9 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
     private fun getCurrentPlayPosition() :Int{
         Log.d(TAG,"执行getCurrentPlayPosition方法")
-        if (currentPosition>getPlayListLength()){
+        if (currentPosition>getPlayListLength()-1){
             Log.e(TAG,"歌曲长度错误")
-            return 0;
+            return -1;
         }else{
             return currentPosition
         }
@@ -179,7 +183,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
     private fun getMediaStatus(): Int{
         Log.d(TAG,"执行getMediaStatus方法")
-        return if (getCurrentPlayPosition()!=0){
+        return if (getCurrentPlayPosition()!=-1){
             OK
         }else{
             ERROR
@@ -188,8 +192,9 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
     private fun updatePlayList(newPlayList : List<String>,position: Int){
         Log.d(TAG,"执行updatePlayList方法")
-        _musicUrlList.value = newPlayList
         currentPosition = position
+        _musicUrlList.value = newPlayList
+        mediaStatus = getMediaStatus()
     }
 
 
