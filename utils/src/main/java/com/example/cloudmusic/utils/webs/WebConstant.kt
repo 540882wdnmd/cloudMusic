@@ -5,7 +5,7 @@ object WebConstant {
     /**
      * Api根地址
      */
-    const val BASE_URL = "http://10.36.65.63:3000"
+    const val BASE_URL = "http://10.44.185.100:3000"
 
     /**
      * 登录的接口地址
@@ -48,4 +48,12 @@ object WebConstant {
     object Personalized{
         const val API_PERSONALIZED = "personalized"
     }
+
+    /**
+     * 获取歌单歌曲
+     */
+    object PlayList{
+        const val API_PLAY_LIST = "playlist/track/all"
+    }
+
 }

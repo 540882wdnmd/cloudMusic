@@ -1,8 +1,9 @@
 package com.example.cloudmusic.utils.webs.bean.response
 
-data class MusicUrl(
+data class MusicUrlResponse(
     val code : Int,
-    val data : Data,
+    val data : List<Data>,
+    val msg : String?
 )
 
 data class Data(

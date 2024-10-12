@@ -1,7 +1,9 @@
 package com.example.cloudmusic.utils
 
 import android.app.Activity
+import android.app.Service
 import android.content.Context
+import android.content.ServiceConnection
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import com.example.cloudmusic.utils.datastore.getStringData
 import com.example.cloudmusic.utils.datastore.preferenceCookie
+import com.example.cloudmusic.utils.service.MusicServiceOnBind
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
@@ -24,6 +27,24 @@ const val MINUTE_TIME = 60 * SECOND_TIME
 const val HOUR_TIME = 60 * MINUTE_TIME
 const val DAY_TIME = 24 * HOUR_TIME
 
+/**
+ * 定义状态
+ */
+const val OK = 200
+const val ERROR = 400
+
+/**
+ * Intent 的setAction()参数
+ */
+const val START_ACTIVITY = "start activity"
+const val START_SERVICE = "start service"
+const val SEND_BROADCAST = "send broadcast"
+
+/**
+ * Intent 的Key 值
+ */
+const val PERSONALIZED_ID = "personalized ID"
+
 /** 将简单类名作为TAG（不包含包名），用于日志打印
  * 定义TAG拓展属性*/
 val Activity.TAG
@@ -33,6 +54,9 @@ val Fragment.TAG
     get() = this::class.simpleName!!
 
 val ViewModel.TAG
+    get() = this::class.simpleName!!
+
+val Service.TAG
     get() = this::class.simpleName!!
 
 /**
@@ -113,3 +137,7 @@ fun isShouldHideInput(view: View,event:MotionEvent):Boolean{
 fun getCookie() = runBlocking {
     getStringData(preferenceCookie)
 }
+
+/**
+ * 配置后台播放音乐服务
+ */

@@ -16,17 +16,24 @@
         tools:targetApi="tiramisu"
         android:testOnly="false">
 
-    <activity
-        android:name=".centre.CentreActivity"
-        android:exported="true"
-        android:launchMode="singleTop"
-        android:hardwareAccelerated="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <service
+            android:name=".utils.service.MusicServiceOnBind"
+            android:enabled="true"
+            android:exported="true"/>
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+        <activity android:name=".centre.playList.PlayListActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".centre.CentreActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:hardwareAccelerated="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
     </application>
 </manifest>

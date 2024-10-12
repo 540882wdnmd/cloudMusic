@@ -1,16 +1,21 @@
 package com.example.cloudmusic.centre.recommend
 
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cloudmusic.centre.R
 import com.example.cloudmusic.centre.databinding.ItemPersonalizedBinding
+import com.example.cloudmusic.centre.playList.PlayListActivity
+import com.example.cloudmusic.utils.PERSONALIZED_ID
+import com.example.cloudmusic.utils.START_ACTIVITY
 import com.example.cloudmusic.utils.webs.bean.response.PersonalizedResult
 
 class PersonalizedAdapter(beanData: List<PersonalizedResult>?) : RecyclerView.Adapter<PersonalizedAdapter.PersonalizedViewHolder>() {
+
 
     private lateinit var binding : ItemPersonalizedBinding
     private  val mData = ArrayList<PersonalizedResult>()
@@ -25,11 +30,19 @@ class PersonalizedAdapter(beanData: List<PersonalizedResult>?) : RecyclerView.Ad
     inner class PersonalizedViewHolder(binding: ItemPersonalizedBinding) : RecyclerView.ViewHolder(binding.root){
         val imageView = binding.personalizedImg
         val textView = binding.personalizedText
+
+        val position = adapterPosition
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonalizedViewHolder {
         binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),R.layout.item_personalized,parent,false)
-        return PersonalizedViewHolder(binding)
+        val holder = PersonalizedViewHolder(binding)
+        holder.itemView .setOnClickListener {
+            val intent = Intent(holder.itemView.context,PlayListActivity::class.java)
+            intent.putExtra(PERSONALIZED_ID,mData[holder.position].id)
+            holder.itemView.context.startActivity(intent)
+        }
+        return holder
     }
 
     override fun getItemCount()= mData.size
@@ -51,4 +64,5 @@ class PersonalizedAdapter(beanData: List<PersonalizedResult>?) : RecyclerView.Ad
         }
         notifyDataSetChanged()
     }
+
 }

@@ -18,7 +18,6 @@ import retrofit2.Response
 class LoginViewModel : ViewModel() {
 
     private val loginModel by lazy { LoginModel() }
-    private val loginFragment by lazy { LoginFragment() }
 
     private val _loginResponse = MutableLiveData<LoginResponse?>()
     val loginResponse : LiveData<LoginResponse?>

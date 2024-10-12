@@ -6,7 +6,7 @@ data class PersonalizedResponse (
 )
 
 data class PersonalizedResult(
-    val id : String,
+    var id : String,
     val name : String,
     val picUrl : String
 )
