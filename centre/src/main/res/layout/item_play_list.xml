@@ -20,24 +20,30 @@
             android:id="@+id/song_pic" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/song_name"
             app:layout_constraintStart_toEndOf="@id/song_pic"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="5dp"
-            android:textSize="18sp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:textSize="15sp"
             android:textColor="@color/black"
             android:gravity="start" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/song_artist"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/song_pic"
-            android:layout_margin="5dp"
-            android:textSize="15sp" />
+            android:layout_marginStart="70dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="12sp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

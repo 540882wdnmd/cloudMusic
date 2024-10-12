@@ -73,6 +73,7 @@ class PlayListAdapter(beanData : List<Song>?) : RecyclerView.Adapter<PlayListAda
         for (ar in arList){
             builder.append(ar.name).append("/")
         }
+        builder.deleteCharAt(builder.length-1)
         return builder.toString()
     }
 

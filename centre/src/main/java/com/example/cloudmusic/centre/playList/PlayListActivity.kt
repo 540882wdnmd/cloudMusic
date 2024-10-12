@@ -53,8 +53,11 @@ class PlayListActivity : AppCompatActivity() {
         setRecyclerView()
         setMusicUrlObserve()
         getPlayListID()
+    }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG,"执行onDestroy方法")
     }
 
 
@@ -124,6 +127,12 @@ class PlayListActivity : AppCompatActivity() {
                 val mBinder = p1 as MusicServiceOnBind.MusicBind
                 mBinder.musicUrlList.observe(this@PlayListActivity){
                     Log.d(TAG,"服务中的musicUrl发生变化")
+                    with(mBinder.media){
+                        if (this.isPlaying){
+                            stop()
+                        }
+                        reset()
+                    }
                     mBinder.start()
                 }
                 mBinder.updatePlayList(musicUrls.toList(),position)

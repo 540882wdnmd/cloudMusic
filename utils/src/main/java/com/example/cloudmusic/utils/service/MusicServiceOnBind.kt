@@ -11,13 +11,14 @@ import androidx.lifecycle.MutableLiveData
 import com.example.cloudmusic.utils.ERROR
 import com.example.cloudmusic.utils.OK
 import com.example.cloudmusic.utils.TAG
+import com.example.cloudmusic.utils.base.BaseApplication
 import com.example.cloudmusic.utils.webs.service.MusicUrlService
 import kotlin.properties.Delegates
 
 
 class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
-    private val mediaPlayer = MediaPlayer()
+    private val mediaPlayer = BaseApplication.mediaPlayer
     private var currentPosition = -1
     private val _musicUrlList = MutableLiveData<List<String>?>()
     private var mediaStatus = OK
@@ -30,6 +31,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     override fun onCompletion(p0: MediaPlayer?) {
         Log.d(TAG,"执行onCompletion方法")
         if(playNext()){
+            Log.d(TAG,"当前是第${currentPosition}首歌")
             return
         }else{
             Log.e(TAG,"onCompletion方法出错")
@@ -61,9 +63,15 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         return MusicBind()
     }
 
+    override fun onUnbind(intent: Intent?): Boolean {
+        Log.d(TAG,"执行onUnbind方法")
+        return super.onUnbind(intent)
+    }
+
     inner class MusicBind : Binder(){
         val musicUrlList : LiveData<List<String>?>
             get() = _musicUrlList
+        val media = mediaPlayer
         fun start() = this@MusicServiceOnBind.start()
         fun play() = this@MusicServiceOnBind.play()
         fun pause() = this@MusicServiceOnBind.pause()
