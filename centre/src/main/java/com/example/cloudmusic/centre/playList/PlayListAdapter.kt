@@ -39,16 +39,11 @@ class PlayListAdapter(beanData : List<Song>?) : RecyclerView.Adapter<PlayListAda
         val songPic = binding.songPic
         val songName = binding.songName
         val songArtist = binding.songArtist
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         binidng = DataBindingUtil.inflate(LayoutInflater.from(parent.context),R.layout.item_play_list,parent,false)
         val holder = ViewHolder(binidng)
-        holder.itemView.setOnClickListener {
-
-        }
         return holder
     }
 

@@ -1,7 +1,6 @@
 package com.example.cloudmusic.centre.recommend
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -11,7 +10,6 @@ import com.example.cloudmusic.centre.R
 import com.example.cloudmusic.centre.databinding.ItemPersonalizedBinding
 import com.example.cloudmusic.centre.playList.PlayListActivity
 import com.example.cloudmusic.utils.PERSONALIZED_ID
-import com.example.cloudmusic.utils.START_ACTIVITY
 import com.example.cloudmusic.utils.webs.bean.response.PersonalizedResult
 
 class PersonalizedAdapter(beanData: List<PersonalizedResult>?) : RecyclerView.Adapter<PersonalizedAdapter.PersonalizedViewHolder>() {
@@ -30,8 +28,6 @@ class PersonalizedAdapter(beanData: List<PersonalizedResult>?) : RecyclerView.Ad
     inner class PersonalizedViewHolder(binding: ItemPersonalizedBinding) : RecyclerView.ViewHolder(binding.root){
         val imageView = binding.personalizedImg
         val textView = binding.personalizedText
-
-        val position = adapterPosition
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonalizedViewHolder {
@@ -39,7 +35,7 @@ class PersonalizedAdapter(beanData: List<PersonalizedResult>?) : RecyclerView.Ad
         val holder = PersonalizedViewHolder(binding)
         holder.itemView .setOnClickListener {
             val intent = Intent(holder.itemView.context,PlayListActivity::class.java)
-            intent.putExtra(PERSONALIZED_ID,mData[holder.position].id)
+            intent.putExtra(PERSONALIZED_ID,mData[holder.adapterPosition].id)
             holder.itemView.context.startActivity(intent)
         }
         return holder

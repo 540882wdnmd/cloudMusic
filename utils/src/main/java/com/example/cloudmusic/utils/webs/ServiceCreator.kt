@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 object ServiceCreator {
 
-    private const val TIME_OUT = 30.toLong()
+    private const val TIME_OUT = 30L
 
     private val client = OkHttpClient.Builder()
         .readTimeout(TIME_OUT, TimeUnit.SECONDS)

@@ -17,19 +17,18 @@ import kotlin.properties.Delegates
 
 class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
-
-
     private val mediaPlayer = MediaPlayer()
     private var currentPosition = 0
     private val _musicUrlList = MutableLiveData<List<String>?>()
-
-
     private var mediaStatus = OK
     init {
+        Log.d(TAG,"init")
         mediaStatus=getMediaStatus()
+        Log.d(TAG,"播放器状态$mediaStatus")
     }
 
     override fun onCompletion(p0: MediaPlayer?) {
+        Log.d(TAG,"执行onCompletion方法")
         if(playNext()){
             return
         }else{
@@ -43,17 +42,6 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (getPlayListLength()==0){
-            Log.e(TAG,"播放资源为空,关闭服务")
-            stopSelf()
-        }else{
-            if (_musicUrlList.value!=null){
-                mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition])
-                mediaPlayer.setOnCompletionListener(this)
-            }else{
-                Log.e(TAG,"onStartCommand出错")
-            }
-        }
         Log.d(TAG,"执行onStartCommend")
         return START_STICKY_COMPATIBILITY
     }
@@ -69,26 +57,45 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     }
 
     override fun onBind(p0: Intent?): IBinder {
+        Log.d(TAG,"执行onBind方法")
         return MusicBind()
     }
 
-    class MusicBind : Binder(){
-        companion object{
-            val service  = MusicServiceOnBind()
-        }
+    inner class MusicBind : Binder(){
         val musicUrlList : LiveData<List<String>?>
-            get() = service._musicUrlList
-        fun play() = service.play()
-        fun pause() = service.pause()
-        fun playNext() = service.playNext()
-        fun playLast() = service.playLast()
-        fun getPlayListLength() = service.getPlayListLength()
-        fun getCurrentPlayPosition() = service.getCurrentPlayPosition()
-        fun getMediaStatus() = service.getMediaStatus()
-        fun updatePlayList(newList: List<String>,position: Int) = service.updatePlayList(newList,position)
+            get() = _musicUrlList
+        fun start() = this@MusicServiceOnBind.start()
+        fun play() = this@MusicServiceOnBind.play()
+        fun pause() = this@MusicServiceOnBind.pause()
+        fun playNext() = this@MusicServiceOnBind.playNext()
+        fun playLast() = this@MusicServiceOnBind.playLast()
+        fun getPlayListLength() = this@MusicServiceOnBind.getPlayListLength()
+        fun getCurrentPlayPosition() = this@MusicServiceOnBind.getCurrentPlayPosition()
+        fun getMediaStatus() = this@MusicServiceOnBind.getMediaStatus()
+        fun updatePlayList(newList: List<String>,position: Int) = this@MusicServiceOnBind.updatePlayList(newList,position)
+    }
+
+    private fun start(){
+        Log.d(TAG,"执行start方法")
+        if (getPlayListLength()==0){
+            Log.e(TAG,"播放资源为空,关闭服务")
+            stopSelf()
+        }else{
+            if (_musicUrlList.value!=null){
+                Log.d(TAG,"当前是第${currentPosition}在播放")
+                mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition])
+                mediaPlayer.setOnCompletionListener(this)
+                mediaPlayer.prepare()
+                mediaPlayer.start()
+                Log.d(TAG,"音乐播放状态${mediaPlayer.isPlaying}")
+            }else{
+                Log.e(TAG,"start方法出错")
+            }
+        }
     }
 
     private fun pause():Boolean{
+        Log.d(TAG,"执行pause方法")
         if (mediaPlayer.isPlaying){
             mediaPlayer.pause()
             return true
@@ -99,6 +106,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     }
 
     private fun play():Boolean{
+        Log.d(TAG,"执行play方法")
         if (!mediaPlayer.isPlaying){
             mediaPlayer.start()
             return true
@@ -109,6 +117,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     }
 
     private fun playNext():Boolean{
+        Log.d(TAG,"执行playNext方法")
         if (mediaStatus==OK){
             mediaPlayer.stop()
             mediaPlayer.reset()
@@ -129,6 +138,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     }
 
     private fun playLast():Boolean{
+        Log.d(TAG,"执行playLast方法")
         if (mediaStatus==OK){
             mediaPlayer.stop()
             mediaPlayer.reset()
@@ -148,9 +158,17 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         }
     }
 
-    private fun getPlayListLength()= _musicUrlList.value?.size ?: 0
+    private fun getPlayListLength():Int{
+        Log.d(TAG,"执行getPlayListLength方法")
+        return if (_musicUrlList.value!=null){
+            _musicUrlList.value!!.size
+        }else{
+            0
+        }
+    }
 
     private fun getCurrentPlayPosition() :Int{
+        Log.d(TAG,"执行getCurrentPlayPosition方法")
         if (currentPosition>getPlayListLength()){
             Log.e(TAG,"歌曲长度错误")
             return 0;
@@ -160,6 +178,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     }
 
     private fun getMediaStatus(): Int{
+        Log.d(TAG,"执行getMediaStatus方法")
         return if (getCurrentPlayPosition()!=0){
             OK
         }else{
@@ -168,6 +187,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     }
 
     private fun updatePlayList(newPlayList : List<String>,position: Int){
+        Log.d(TAG,"执行updatePlayList方法")
         _musicUrlList.value = newPlayList
         currentPosition = position
     }

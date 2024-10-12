@@ -50,8 +50,10 @@ class PlayListActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setRecyclerView()
+        setMusicUrlObserve()
         getPlayListID()
-        getMusicUrl()
+
+
     }
 
 
@@ -67,6 +69,12 @@ class PlayListActivity : AppCompatActivity() {
         playListAdapter = PlayListAdapter(null)
         recyclerView.adapter = playListAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        playListAdapter.setOnClickListener {
+            position->
+            Log.d(TAG,"点击了第${position}个item")
+            startService(position)
+        }
     }
 
     private fun getPlayListID() {
@@ -80,6 +88,8 @@ class PlayListActivity : AppCompatActivity() {
                         songIds.append(song.id).append(",")
                     }
                     songIds.deleteCharAt(songIds.length-1)
+                    Log.d(TAG, "歌单歌曲的所有ID:$songIds")
+                    playListViewModel.getMusicUrl(songIds.toString())
                 }else if(it.code == 400){
                     it.msg?.let { it1 -> toast(it1) }
                 }
@@ -90,13 +100,14 @@ class PlayListActivity : AppCompatActivity() {
         playListViewModel.getPlayList(playListID)
     }
 
-    private fun getMusicUrl(){
+    private fun setMusicUrlObserve(){
         playListViewModel.musicUrl.observe(this){
             if (it!=null){
                 if (it.code == 200){
                     for (url in it.data){
                         musicUrls.add(url.url)
                     }
+                    Log.d(TAG,"歌单音乐Url:$musicUrls")
                 }else if (it.code == 400){
                     it.msg?.let { it1 -> toast(it1) }
                 }
@@ -104,20 +115,25 @@ class PlayListActivity : AppCompatActivity() {
                 toast("网络连接错误！！！")
             }
         }
-        playListViewModel.getMusicUrl(songIds.toString())
     }
 
-    private fun startService(){
+    private fun startService(position: Int){
         val serviceConnection = object : ServiceConnection{
             override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
                 val mBinder = p1 as MusicServiceOnBind.MusicBind
+                mBinder.musicUrlList.observe(this@PlayListActivity){
+                    Log.d(TAG,"服务中的musicUrl发生变化")
+                    mBinder.start()
+                }
+                mBinder.updatePlayList(musicUrls.toList(),position)
             }
 
             override fun onServiceDisconnected(p0: ComponentName?) {
                 return
             }
-
         }
+        val intent = Intent(this,MusicServiceOnBind::class.java)
+        bindService(intent,serviceConnection, BIND_AUTO_CREATE)
     }
 
 }
