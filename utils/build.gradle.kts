@@ -49,7 +49,7 @@ dependencies {
     implementation(libs.androidx.room.room.runtime3)
     implementation(libs.com.github.bumptech.glide.glide3)
     implementation(libs.junit)
-    implementation("com.squareup.leakcanary:leakcanary-android:2.14")
+    debugImplementation(libs.leakcanary.android)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

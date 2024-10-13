@@ -61,7 +61,6 @@ class PlayListActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mBinder.sendPlayListData(songList)
         Log.d(TAG,"执行onDestroy方法")
     }
 
@@ -139,6 +138,7 @@ class PlayListActivity : AppCompatActivity() {
             mBinder.start()
         }
         mBinder.updatePlayList(musicUrls.toList(),position)
+        mBinder.sendPlayListData(songList)
     }
 
 

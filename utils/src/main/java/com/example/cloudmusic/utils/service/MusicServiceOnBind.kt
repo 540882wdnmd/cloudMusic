@@ -23,7 +23,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     private var currentPosition = -1
     private val _musicUrlList = MutableLiveData<List<String>?>()
     private val _playingSongData = MutableLiveData<Song>()
-    private val playListData = ArrayList<Song>()
+    private val playListData = ArrayList<Song?>()
     private var mediaStatus = OK
     init {
         Log.d(TAG,"init")
@@ -87,7 +87,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         fun getMediaStatus() = this@MusicServiceOnBind.getMediaStatus()
         fun updatePlayList(newList: List<String>,position: Int) = this@MusicServiceOnBind.updatePlayList(newList,position)
         fun sendPlayListData(data : List<Song>) = this@MusicServiceOnBind.sendPlayListData(data)
-        fun getPlayListData() = this@MusicServiceOnBind.getPlayListData()
+        fun getPlayingSongData() = this@MusicServiceOnBind.getPlayingSongData()
     }
 
     private fun start(){
@@ -219,12 +219,15 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         for (d in data){
             playListData.add(d)
         }
-        _playingSongData.value = playListData[currentPosition]
+       if (currentPosition!=-1){
+           _playingSongData.value = playListData[currentPosition]
+       }
     }
 
-    private fun getPlayListData():ArrayList<Song> {
-        return playListData
+    private fun getPlayingSongData(){
+        if (currentPosition!=-1){
+            _playingSongData.value = playListData[currentPosition]
+        }
     }
-
 
 }

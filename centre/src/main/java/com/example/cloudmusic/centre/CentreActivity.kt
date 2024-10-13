@@ -51,9 +51,6 @@ class CentreActivity : AppCompatActivity() {
 
     private lateinit var mBinder : MusicServiceOnBind.MusicBind
 
-    init {
-        startService()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +62,20 @@ class CentreActivity : AppCompatActivity() {
         setDrawerLayout()
         setBottomNav()
         setSimpleView()
+
+        val serviceConnection = object :ServiceConnection{
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                Log.d(TAG,"onServiceConnected")
+                BaseApplication.mBinder = service as MusicServiceOnBind.MusicBind
+                mBinder = BaseApplication.mBinder
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {
+                return
+            }
+        }
+        val intent = Intent(appContext,MusicServiceOnBind::class.java)
+        this@CentreActivity.bindService(intent,serviceConnection, BIND_AUTO_CREATE)
 
     }
 
@@ -173,23 +184,6 @@ class CentreActivity : AppCompatActivity() {
                 .into(simpleViewPic)
             Log.d(TAG, "UI设置成功")
         }
+        mBinder.getPlayingSongData()
     }
-
-    private fun startService(){
-        val serviceConnection = object :ServiceConnection{
-            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                Log.d(TAG,"onServiceConnected")
-                BaseApplication.mBinder = service as MusicServiceOnBind.MusicBind
-                mBinder = BaseApplication.mBinder
-            }
-
-            override fun onServiceDisconnected(name: ComponentName?) {
-                return
-            }
-        }
-        val intent = Intent(appContext,MusicServiceOnBind::class.java)
-        bindService(intent,serviceConnection, BIND_AUTO_CREATE)
-    }
-
-
 }

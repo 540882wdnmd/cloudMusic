@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.com.github.bumptech.glide.glide3)
     implementation(libs.junit)
     implementation(libs.banner)
+    debugImplementation(libs.leakcanary.android)
 
 
     implementation(libs.androidx.core.ktx)
