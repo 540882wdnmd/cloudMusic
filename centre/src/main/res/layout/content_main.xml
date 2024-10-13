@@ -22,7 +22,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:navGraph="@navigation/mobile_navigation" />
 
-        <include android:id="@+id/view_simple_music_player"
+        <include
+            android:id="@+id/view_simple_music_player"
             layout="@layout/view_simple_player"/>
 
 

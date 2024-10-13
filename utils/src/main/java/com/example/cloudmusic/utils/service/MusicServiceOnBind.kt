@@ -12,6 +12,7 @@ import com.example.cloudmusic.utils.ERROR
 import com.example.cloudmusic.utils.OK
 import com.example.cloudmusic.utils.TAG
 import com.example.cloudmusic.utils.base.BaseApplication
+import com.example.cloudmusic.utils.webs.bean.response.Song
 import com.example.cloudmusic.utils.webs.service.MusicUrlService
 import kotlin.properties.Delegates
 
@@ -21,6 +22,8 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     private val mediaPlayer = BaseApplication.mediaPlayer
     private var currentPosition = -1
     private val _musicUrlList = MutableLiveData<List<String>?>()
+    private val _playingSongData = MutableLiveData<Song>()
+    private val playListData = ArrayList<Song>()
     private var mediaStatus = OK
     init {
         Log.d(TAG,"init")
@@ -71,6 +74,8 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     inner class MusicBind : Binder(){
         val musicUrlList : LiveData<List<String>?>
             get() = _musicUrlList
+        val playingSongData : LiveData<Song>
+            get() = _playingSongData
         val media = mediaPlayer
         fun start() = this@MusicServiceOnBind.start()
         fun play() = this@MusicServiceOnBind.play()
@@ -81,6 +86,8 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         fun getCurrentPlayPosition() = this@MusicServiceOnBind.getCurrentPlayPosition()
         fun getMediaStatus() = this@MusicServiceOnBind.getMediaStatus()
         fun updatePlayList(newList: List<String>,position: Int) = this@MusicServiceOnBind.updatePlayList(newList,position)
+        fun sendPlayListData(data : List<Song>) = this@MusicServiceOnBind.sendPlayListData(data)
+        fun getPlayListData() = this@MusicServiceOnBind.getPlayListData()
     }
 
     private fun start(){
@@ -136,6 +143,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
                 }else{
                     mediaPlayer.setDataSource(_musicUrlList.value!![++currentPosition])
                 }
+                _playingSongData.value = playListData[currentPosition]
                 mediaPlayer.prepare()
                 mediaPlayer.start()
             }else{
@@ -159,6 +167,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
                 }else{
                     mediaPlayer.setDataSource(_musicUrlList.value!![--currentPosition])
                 }
+                _playingSongData.value = playListData[currentPosition]
                 mediaPlayer.prepare()
                 mediaPlayer.start()
             }else{
@@ -203,6 +212,18 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         currentPosition = position
         _musicUrlList.value = newPlayList
         mediaStatus = getMediaStatus()
+    }
+
+    private fun sendPlayListData(data : List<Song>){
+        playListData.clear()
+        for (d in data){
+            playListData.add(d)
+        }
+        _playingSongData.value = playListData[currentPosition]
+    }
+
+    private fun getPlayListData():ArrayList<Song> {
+        return playListData
     }
 
 

@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -68,7 +70,7 @@ class RecommendFragment :Fragment() {
             clickId ->
             val intent = Intent(requireContext(), PlayListActivity::class.java)
             intent.putExtra(PERSONALIZED_ID,clickId)
-            requireContext().startActivity(intent)
+            startActivity(intent)
         }
         personalized.adapter = personalizedAdapter
         recommendViewModel.personalized.observe(viewLifecycleOwner){

@@ -23,6 +23,7 @@ import com.example.cloudmusic.utils.TAG
 import com.example.cloudmusic.utils.base.BaseApplication
 import com.example.cloudmusic.utils.service.MusicServiceOnBind
 import com.example.cloudmusic.utils.toast
+import com.example.cloudmusic.utils.webs.bean.response.Song
 
 class PlayListActivity : AppCompatActivity() {
 
@@ -31,9 +32,12 @@ class PlayListActivity : AppCompatActivity() {
     private lateinit var playListAdapter: PlayListAdapter
     private lateinit var recyclerView: RecyclerView
 
+    private val mBinder = BaseApplication.mBinder
     private lateinit var playListID : String
     private var songIds = StringBuilder()
     private val musicUrls = ArrayList<String>()
+    private val songList = ArrayList<Song>()
+
 
     private val playListViewModel by lazy { ViewModelProvider(this)[PlayListViewModel::class] }
 
@@ -57,6 +61,7 @@ class PlayListActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        mBinder.sendPlayListData(songList)
         Log.d(TAG,"执行onDestroy方法")
     }
 
@@ -77,7 +82,7 @@ class PlayListActivity : AppCompatActivity() {
         playListAdapter.setOnClickListener {
             position->
             Log.d(TAG,"点击了第${position}个item")
-            startService(position)
+            serviceLogic(position)
         }
     }
 
@@ -90,6 +95,7 @@ class PlayListActivity : AppCompatActivity() {
                     playListAdapter.updateData(it.songs)
                     for (song in it.songs) {
                         songIds.append(song.id).append(",")
+                        songList.add(song)
                     }
                     songIds.deleteCharAt(songIds.length-1)
                     Log.d(TAG, "歌单歌曲的所有ID:$songIds")
@@ -121,29 +127,20 @@ class PlayListActivity : AppCompatActivity() {
         }
     }
 
-    private fun startService(position: Int){
-        val serviceConnection = object : ServiceConnection{
-            override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
-                val mBinder = p1 as MusicServiceOnBind.MusicBind
-                mBinder.musicUrlList.observe(this@PlayListActivity){
-                    Log.d(TAG,"服务中的musicUrl发生变化")
-                    with(mBinder.media){
-                        if (this.isPlaying){
-                            stop()
-                        }
-                        reset()
-                    }
-                    mBinder.start()
+    private fun serviceLogic(position: Int){
+        mBinder.musicUrlList.observe(this@PlayListActivity){
+            Log.d(TAG,"服务中的musicUrl发生变化")
+            with(mBinder.media){
+                if (this.isPlaying){
+                    stop()
                 }
-                mBinder.updatePlayList(musicUrls.toList(),position)
+                reset()
             }
-
-            override fun onServiceDisconnected(p0: ComponentName?) {
-                return
-            }
+            mBinder.start()
         }
-        val intent = Intent(BaseApplication.appContext,MusicServiceOnBind::class.java)
-        bindService(intent,serviceConnection, BIND_AUTO_CREATE)
+        mBinder.updatePlayList(musicUrls.toList(),position)
     }
+
+
 
 }

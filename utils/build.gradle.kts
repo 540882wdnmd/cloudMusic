@@ -43,13 +43,13 @@ dependencies {
     implementation(libs.com.squareup.retrofit2.retrofit2)
     implementation(libs.com.squareup.retrofit2.converter.gson2)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation( libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.room.room.runtime3)
     implementation(libs.com.github.bumptech.glide.glide3)
     implementation(libs.junit)
-
+    implementation("com.squareup.leakcanary:leakcanary-android:2.14")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -59,4 +59,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
 }
