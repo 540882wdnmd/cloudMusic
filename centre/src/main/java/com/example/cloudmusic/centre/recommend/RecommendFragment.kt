@@ -1,5 +1,6 @@
 package com.example.cloudmusic.centre.recommend
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cloudmusic.centre.databinding.FragmentRecommendBinding
 import com.example.cloudmusic.centre.databinding.ItemPersonalizedBinding
+import com.example.cloudmusic.centre.playList.PlayListActivity
+import com.example.cloudmusic.utils.PERSONALIZED_ID
 import com.example.cloudmusic.utils.TAG
 import com.example.cloudmusic.utils.toast
 
@@ -61,13 +64,19 @@ class RecommendFragment :Fragment() {
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         personalized.layoutManager = layoutManager
         personalizedAdapter = PersonalizedAdapter(null)
+        personalizedAdapter.setOnClickListener {
+            clickId ->
+            val intent = Intent(requireContext(), PlayListActivity::class.java)
+            intent.putExtra(PERSONALIZED_ID,clickId)
+            requireContext().startActivity(intent)
+        }
         personalized.adapter = personalizedAdapter
         recommendViewModel.personalized.observe(viewLifecycleOwner){
             if (it != null) {
                 if (it.code==200){
                     personalizedAdapter.updateData(it.result)
                 }else if(it.code==400){
-                    toast("获取Banner失败")
+                    toast("获取Personalized失败")
                 }
             }else{
                 toast("网络链接失败")
