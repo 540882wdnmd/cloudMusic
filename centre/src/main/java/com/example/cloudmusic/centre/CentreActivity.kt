@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -16,6 +17,9 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.constraintlayout.widget.ConstraintSet.Constraint
+import androidx.constraintlayout.widget.ConstraintSet.Layout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -25,11 +29,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.example.cloudmusic.centre.bottomSheet.BottomSheetFragment
 import com.example.cloudmusic.centre.databinding.ActivityCentreBinding
 import com.example.cloudmusic.utils.TAG
 import com.example.cloudmusic.utils.base.BaseApplication
 import com.example.cloudmusic.utils.base.BaseApplication.Companion
 import com.example.cloudmusic.utils.base.BaseApplication.Companion.appContext
+import com.example.cloudmusic.utils.base.BaseApplication.Companion.mediaPlayer
 import com.example.cloudmusic.utils.hideKeyboard
 import com.example.cloudmusic.utils.service.MusicServiceOnBind
 import com.example.cloudmusic.utils.webs.bean.response.Song
@@ -42,6 +48,7 @@ class CentreActivity : AppCompatActivity() {
     private lateinit var simpleViewName : TextView
     private lateinit var simpleViewSwitch : ImageButton
     private lateinit var simpleViewNext : ImageButton
+    private lateinit var simpleView : View
     private lateinit var binding : ActivityCentreBinding
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var drawerLayout: DrawerLayout
@@ -54,6 +61,7 @@ class CentreActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG,"执行onCreate")
         BaseApplication.activity = WeakReference(this)
 
         binding  = ActivityCentreBinding.inflate(layoutInflater)
@@ -62,20 +70,7 @@ class CentreActivity : AppCompatActivity() {
         setDrawerLayout()
         setBottomNav()
         setSimpleView()
-
-        val serviceConnection = object :ServiceConnection{
-            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                Log.d(TAG,"onServiceConnected")
-                BaseApplication.mBinder = service as MusicServiceOnBind.MusicBind
-                mBinder = BaseApplication.mBinder
-            }
-
-            override fun onServiceDisconnected(name: ComponentName?) {
-                return
-            }
-        }
-        val intent = Intent(appContext,MusicServiceOnBind::class.java)
-        this@CentreActivity.bindService(intent,serviceConnection, BIND_AUTO_CREATE)
+        startService()
 
     }
 
@@ -103,6 +98,11 @@ class CentreActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        if(mediaPlayer.isPlaying){
+            mediaPlayer.pause()
+        }
+        mediaPlayer.stop()
+        mediaPlayer.release()
         Log.d(TAG,"执行onDestroy")
     }
 
@@ -167,10 +167,29 @@ class CentreActivity : AppCompatActivity() {
 
     private fun setSimpleView(){
         with(binding.appBarMain.contentMain.viewSimpleMusicPlayer){
+            simpleView = root
             simpleViewPic = songPic
             simpleViewName = songPlayingName
             simpleViewSwitch = startPauseButton
             simpleViewNext = nextMusicButton
+        }
+        simpleViewSwitch.setOnClickListener {
+            simpleViewSwitch.setImageResource(R.drawable.ico_music_start_black)
+            if (mediaPlayer.isPlaying){
+                mBinder.pause()
+                simpleViewSwitch.setImageResource(R.drawable.ico_music_start_black)
+            }else{
+                mBinder.play()
+                simpleViewSwitch.setImageResource(R.drawable.ico_music_pause)
+            }
+        }
+
+        simpleViewNext.setOnClickListener {
+            mBinder.playNext()
+        }
+
+        simpleView.setOnClickListener {
+            BottomSheetFragment().show(supportFragmentManager,TAG)
         }
     }
 
@@ -182,8 +201,33 @@ class CentreActivity : AppCompatActivity() {
             Glide.with(this@CentreActivity)
                 .load(it.al.picUrl)
                 .into(simpleViewPic)
+            if (mediaPlayer.isPlaying){
+                simpleViewSwitch.setImageResource(R.drawable.ico_music_pause)
+            }else{
+                simpleViewSwitch.setImageResource(R.drawable.ico_music_start_black)
+            }
             Log.d(TAG, "UI设置成功")
         }
         mBinder.getPlayingSongData()
+    }
+
+    private fun startService(){
+        val serviceConnection = object :ServiceConnection{
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                Log.d(TAG,"onServiceConnected")
+                BaseApplication.mBinder = service as MusicServiceOnBind.MusicBind
+                mBinder = BaseApplication.mBinder
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {
+                return
+            }
+        }
+        val intent = Intent(appContext,MusicServiceOnBind::class.java)
+        this@CentreActivity.bindService(intent,serviceConnection, BIND_AUTO_CREATE)
+    }
+
+    private fun showBottomSheetFragment(){
+
     }
 }

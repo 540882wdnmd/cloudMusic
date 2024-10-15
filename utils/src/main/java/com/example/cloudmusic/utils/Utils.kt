@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Service
 import android.content.Context
 import android.content.ServiceConnection
+import android.media.MediaPlayer
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -22,10 +23,20 @@ import okhttp3.ResponseBody
 /**
  * 单位ms 定义时间
  */
-const val SECOND_TIME = 1000L
+const val SECOND_TIME = 1000
 const val MINUTE_TIME = 60 * SECOND_TIME
 const val HOUR_TIME = 60 * MINUTE_TIME
 const val DAY_TIME = 24 * HOUR_TIME
+
+/**
+ * MediaPlayer转换时间格式
+ */
+fun MediaPlayer.convertTimeFormat(duration : Int) : String{
+    val minuteTime = duration/ MINUTE_TIME
+    val secondTime = (duration % MINUTE_TIME) / SECOND_TIME
+    val stringBuilder = StringBuilder()
+    return stringBuilder.append(minuteTime).append(":").append(secondTime).toString()
+}
 
 /**
  * 定义状态

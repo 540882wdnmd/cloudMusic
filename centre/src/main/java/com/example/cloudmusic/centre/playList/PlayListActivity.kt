@@ -129,8 +129,9 @@ class PlayListActivity : AppCompatActivity() {
     private fun serviceLogic(position: Int){
         mBinder.musicUrlList.observe(this@PlayListActivity){
             Log.d(TAG,"服务中的musicUrl发生变化")
-            with(mBinder.media){
+            with(BaseApplication.mediaPlayer){
                 if (this.isPlaying){
+                    pause()
                     stop()
                 }
                 reset()

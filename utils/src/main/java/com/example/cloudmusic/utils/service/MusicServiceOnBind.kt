@@ -28,6 +28,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     init {
         Log.d(TAG,"init")
         mediaStatus=getMediaStatus()
+        mediaPlayer.setOnCompletionListener(this)
         Log.d(TAG,"播放器状态$mediaStatus")
     }
 
@@ -54,11 +55,6 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG,"执行onDestroy")
-//        if (mediaPlayer.isPlaying){
-//            mediaPlayer.stop()
-//        }
-//        mediaPlayer.release()
-//        stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
     override fun onBind(p0: Intent?): IBinder {
@@ -76,7 +72,6 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
             get() = _musicUrlList
         val playingSongData : LiveData<Song>
             get() = _playingSongData
-        val media = mediaPlayer
         fun start() = this@MusicServiceOnBind.start()
         fun play() = this@MusicServiceOnBind.play()
         fun pause() = this@MusicServiceOnBind.pause()
@@ -97,12 +92,15 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
             stopSelf()
         }else{
             if (_musicUrlList.value!=null){
-                Log.d(TAG,"当前是第${currentPosition}在播放")
-                mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition])
-                mediaPlayer.setOnCompletionListener(this)
-                mediaPlayer.prepare()
-                mediaPlayer.start()
-                Log.d(TAG,"音乐播放状态${mediaPlayer.isPlaying}")
+                try {
+                    mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition])
+                    mediaPlayer.prepare()
+                    mediaPlayer.start()
+                    Log.d(TAG,"当前是第${currentPosition}在播放")
+                }catch (e:Throwable){
+                    Log.e(TAG,e.message,e)
+                    playNext()
+                }
             }else{
                 Log.e(TAG,"start方法出错")
             }
@@ -131,25 +129,35 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         }
     }
 
+
+
     private fun playNext():Boolean{
         Log.d(TAG,"执行playNext方法")
         if (mediaStatus==OK){
+            mediaPlayer.pause()
             mediaPlayer.stop()
             mediaPlayer.reset()
             if (_musicUrlList.value!=null){
-                if (getCurrentPlayPosition()==getPlayListLength()-1){
-                    currentPosition=0
-                    mediaPlayer.setDataSource(_musicUrlList.value!![0])
-                }else{
-                    mediaPlayer.setDataSource(_musicUrlList.value!![++currentPosition])
+                try {
+                    if (getCurrentPlayPosition()==getPlayListLength()-1){
+                        currentPosition=0
+                        mediaPlayer.setDataSource(_musicUrlList.value!![0])
+                    }else{
+                        currentPosition++
+                        mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition])
+                    }
+                    mediaPlayer.prepare()
+                    mediaPlayer.start()
+                    _playingSongData.value = playListData[currentPosition]
+                }catch (e:Throwable){
+                    Log.e(TAG,e.message,e)
+                    playNext()
                 }
-                _playingSongData.value = playListData[currentPosition]
-                mediaPlayer.prepare()
-                mediaPlayer.start()
+                return true
             }else{
                 Log.e(TAG,"playNext方法出错")
+                return false
             }
-            return true
         }else{
             return false
         }
@@ -158,21 +166,29 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     private fun playLast():Boolean{
         Log.d(TAG,"执行playLast方法")
         if (mediaStatus==OK){
+            mediaPlayer.pause()
             mediaPlayer.stop()
             mediaPlayer.reset()
             if (_musicUrlList.value!=null){
-                if (getCurrentPlayPosition()==0){
-                    currentPosition=getPlayListLength()-1
-                    mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition])
-                }else{
-                    mediaPlayer.setDataSource(_musicUrlList.value!![--currentPosition])
+                try {
+                    if (getCurrentPlayPosition()==0){
+                        currentPosition=getPlayListLength()-1
+                        mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition])
+                    }else{
+                        currentPosition--
+                        mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition])
+                    }
+                    mediaPlayer.prepare()
+                    mediaPlayer.start()
+                    _playingSongData.value = playListData[currentPosition]
+                }catch (e: Throwable){
+                    Log.e(TAG,e.message,e)
+                    playLast()
                 }
-                _playingSongData.value = playListData[currentPosition]
-                mediaPlayer.prepare()
-                mediaPlayer.start()
             }else{
                 Log.e(TAG,"playLast方法出错")
             }
+            Log.d(TAG,"当前是第${currentPosition}在播放")
             return true
         }else{
             return false
@@ -224,10 +240,11 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
        }
     }
 
-    private fun getPlayingSongData(){
+    private fun getPlayingSongData() : Song?{
         if (currentPosition!=-1){
             _playingSongData.value = playListData[currentPosition]
         }
+        return _playingSongData.value
     }
 
 }

@@ -29,4 +29,5 @@ class BaseApplication : Application() {
         mediaPlayer = MediaPlayer()
         cookie = getCookie()
     }
+
 }

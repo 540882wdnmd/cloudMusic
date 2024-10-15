@@ -9,5 +9,7 @@
         <color name="white">#FFFFFFFF</color>
         <color name="rose">#ffe4e1</color>
         <color name="peach">#ffdab9</color>
+        <color name="grey">#808080</color><!--灰色 -->
+        <color name="ivory">#FFFFF0</color><!--象牙色 -->
 
 </resources>
