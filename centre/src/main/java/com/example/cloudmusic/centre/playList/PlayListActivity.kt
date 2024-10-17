@@ -1,27 +1,19 @@
 package com.example.cloudmusic.centre.playList
 
-import android.content.ComponentName
-import android.content.Intent
-import android.content.ServiceConnection
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cloudmusic.centre.R
 import com.example.cloudmusic.centre.databinding.ActivityPlayListBinding
+import com.example.cloudmusic.utils.MediaPlayerManager
 import com.example.cloudmusic.utils.PERSONALIZED_ID
 import com.example.cloudmusic.utils.TAG
 import com.example.cloudmusic.utils.base.BaseApplication
-import com.example.cloudmusic.utils.service.MusicServiceOnBind
 import com.example.cloudmusic.utils.toast
 import com.example.cloudmusic.utils.webs.bean.response.Song
 
@@ -31,6 +23,7 @@ class PlayListActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private lateinit var playListAdapter: PlayListAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var mediaPlayer: MediaPlayer
 
     private val mBinder = BaseApplication.mBinder
     private lateinit var playListID : String
@@ -46,6 +39,7 @@ class PlayListActivity : AppCompatActivity() {
 
         binding = ActivityPlayListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        mediaPlayer = MediaPlayerManager.getMediaPlayer()
         with(binding){
             toolbar = toolbarPlayList
             recyclerView = recyclerViewPlayList
@@ -129,7 +123,7 @@ class PlayListActivity : AppCompatActivity() {
     private fun serviceLogic(position: Int){
         mBinder.musicUrlList.observe(this@PlayListActivity){
             Log.d(TAG,"服务中的musicUrl发生变化")
-            with(BaseApplication.mediaPlayer){
+            with(mediaPlayer){
                 if (this.isPlaying){
                     pause()
                     stop()

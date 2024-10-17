@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
     <application
         android:allowBackup="true"
         android:name=".utils.base.BaseApplication"
@@ -21,10 +26,13 @@
             android:enabled="true"
             android:exported="true"/>
 
-        <activity android:name=".centre.playList.PlayListActivity"
+        <activity
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:name=".centre.playList.PlayListActivity"
             android:exported="true"/>
         <activity
             android:name=".centre.CentreActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true"
             android:launchMode="singleTop"
             android:hardwareAccelerated="true">

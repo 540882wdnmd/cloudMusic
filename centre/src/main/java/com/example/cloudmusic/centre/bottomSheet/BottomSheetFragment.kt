@@ -1,6 +1,7 @@
 package com.example.cloudmusic.centre.bottomSheet
 
 import android.app.Dialog
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,8 +15,8 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.cloudmusic.centre.R
 import com.example.cloudmusic.centre.databinding.FragmentBottomSheetBinding
+import com.example.cloudmusic.utils.MediaPlayerManager
 import com.example.cloudmusic.utils.base.BaseApplication.Companion.mBinder
-import com.example.cloudmusic.utils.base.BaseApplication.Companion.mediaPlayer
 import com.example.cloudmusic.utils.convertTimeFormat
 import com.example.cloudmusic.utils.webs.bean.response.Artist
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -27,6 +28,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
     private val TAG = "BottomSheetFragment"
 
+    private lateinit var mediaPlayer: MediaPlayer
     private lateinit var dialog: Dialog
     private lateinit var binding : FragmentBottomSheetBinding
     private lateinit var songPic : ImageView
@@ -55,6 +57,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
             switchButton = musicPlayingStartStop
             nextButton = musicPlayingNext
         }
+        mediaPlayer = MediaPlayerManager.getMediaPlayer()
         return dialog
     }
 
@@ -80,15 +83,6 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
         initView()
         //seekBar
         seekBar()
-    }
-
-    private fun songArtistString(arList : List<Artist>) : String{
-        val builder : StringBuilder = StringBuilder()
-        for (ar in arList){
-            builder.append(ar.name).append("/")
-        }
-        builder.deleteCharAt(builder.length-1)
-        return builder.toString()
     }
 
     private fun seekBar(){
@@ -150,6 +144,15 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
             }
         }
         mBinder.getPlayingSongData()
+    }
+
+    private fun songArtistString(arList : List<Artist>) : String{
+        val builder : StringBuilder = StringBuilder()
+        for (ar in arList){
+            builder.append(ar.name).append("/")
+        }
+        builder.deleteCharAt(builder.length-1)
+        return builder.toString()
     }
 
 }

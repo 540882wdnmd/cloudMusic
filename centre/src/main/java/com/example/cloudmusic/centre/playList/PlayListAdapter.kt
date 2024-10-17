@@ -1,6 +1,5 @@
 package com.example.cloudmusic.centre.playList
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -8,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cloudmusic.centre.R
 import com.example.cloudmusic.centre.databinding.ItemPlayListBinding
-import com.example.cloudmusic.utils.service.MusicServiceOnBind
 import com.example.cloudmusic.utils.webs.bean.response.Artist
 import com.example.cloudmusic.utils.webs.bean.response.Song
 

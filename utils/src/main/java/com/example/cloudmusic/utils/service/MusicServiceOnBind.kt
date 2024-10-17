@@ -6,30 +6,39 @@ import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import android.widget.RemoteViews
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.cloudmusic.utils.ERROR
-import com.example.cloudmusic.utils.OK
+import com.example.cloudmusic.utils.MediaPlayerManager
 import com.example.cloudmusic.utils.TAG
 import com.example.cloudmusic.utils.base.BaseApplication
 import com.example.cloudmusic.utils.webs.bean.response.Song
-import com.example.cloudmusic.utils.webs.service.MusicUrlService
-import kotlin.properties.Delegates
 
 
 class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
-    private val mediaPlayer = BaseApplication.mediaPlayer
+    private lateinit var mediaPlayer : MediaPlayer
     private var currentPosition = -1
     private val _musicUrlList = MutableLiveData<List<String>?>()
     private val _playingSongData = MutableLiveData<Song>()
     private val playListData = ArrayList<Song?>()
-    private var mediaStatus = OK
+    private lateinit var remoteViews: RemoteViews
+
+    companion object{
+        const val MUSIC_NOTIFICATION_ACTION_LAST = "MusicNotificationToLast"
+        const val MUSIC_NOTIFICATION_ACTION_NEXT = "MusicNotificationToNEXT"
+        const val MUSIC_NOTIFICATION_ACTION_SWITCH = "MusicNotificationToSwitch"
+        const val MUSIC_NOTIFICATION_INTENT_KEY = "type"
+        const val MUSIC_NOTIFICATION_VALUE_PLAY = 30001
+        const val MUSIC_NOTIFICATION_VALUE_NEXT = 30002
+        const val MUSIC_NOTIFICATION_VALUE_CLOSE =30003
+        const val REQUEST_CODE = 3000
+        const val CHANNEL_ID = "cloud.music"
+        const val NOTIFICATION_ID = 10001
+    }
+
     init {
         Log.d(TAG,"init")
-        mediaStatus=getMediaStatus()
-        mediaPlayer.setOnCompletionListener(this)
-        Log.d(TAG,"播放器状态$mediaStatus")
     }
 
     override fun onCompletion(p0: MediaPlayer?) {
@@ -44,6 +53,8 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
     override fun onCreate() {
         super.onCreate()
+        mediaPlayer = MediaPlayerManager.getMediaPlayer()
+        mediaPlayer.setOnCompletionListener(this)
         Log.d(TAG,"执行onCreate")
     }
 
@@ -79,7 +90,6 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         fun playLast() = this@MusicServiceOnBind.playLast()
         fun getPlayListLength() = this@MusicServiceOnBind.getPlayListLength()
         fun getCurrentPlayPosition() = this@MusicServiceOnBind.getCurrentPlayPosition()
-        fun getMediaStatus() = this@MusicServiceOnBind.getMediaStatus()
         fun updatePlayList(newList: List<String>,position: Int) = this@MusicServiceOnBind.updatePlayList(newList,position)
         fun sendPlayListData(data : List<Song>) = this@MusicServiceOnBind.sendPlayListData(data)
         fun getPlayingSongData() = this@MusicServiceOnBind.getPlayingSongData()
@@ -92,6 +102,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
             stopSelf()
         }else{
             if (_musicUrlList.value!=null){
+                checkData()
                 try {
                     mediaPlayer.setDataSource(_musicUrlList.value!![currentPosition])
                     mediaPlayer.prepare()
@@ -133,7 +144,8 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
     private fun playNext():Boolean{
         Log.d(TAG,"执行playNext方法")
-        if (mediaStatus==OK){
+        checkData()
+        if (currentPosition!=-1){
             mediaPlayer.pause()
             mediaPlayer.stop()
             mediaPlayer.reset()
@@ -165,11 +177,12 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
     private fun playLast():Boolean{
         Log.d(TAG,"执行playLast方法")
-        if (mediaStatus==OK){
+        if (currentPosition!=-1){
             mediaPlayer.pause()
             mediaPlayer.stop()
             mediaPlayer.reset()
             if (_musicUrlList.value!=null){
+                checkData()
                 try {
                     if (getCurrentPlayPosition()==0){
                         currentPosition=getPlayListLength()-1
@@ -214,20 +227,10 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         }
     }
 
-    private fun getMediaStatus(): Int{
-        Log.d(TAG,"执行getMediaStatus方法")
-        return if (getCurrentPlayPosition()!=-1){
-            OK
-        }else{
-            ERROR
-        }
-    }
-
     private fun updatePlayList(newPlayList : List<String>,position: Int){
         Log.d(TAG,"执行updatePlayList方法")
         currentPosition = position
         _musicUrlList.value = newPlayList
-        mediaStatus = getMediaStatus()
     }
 
     private fun sendPlayListData(data : List<Song>){
@@ -246,5 +249,29 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         }
         return _playingSongData.value
     }
+
+    private fun checkData(){
+        while (_musicUrlList.value?.get(currentPosition)==null){
+            currentPosition++
+        }
+    }
+
+//    private fun createNotification() : Notification{
+//        val intentLast = Intent(this,MusicServiceOnBind::class.java)
+//        intentLast.setAction(MUSIC_NOTIFICATION_ACTION_LAST)
+//        val intentSwitch = Intent(this,MusicServiceOnBind::class.java)
+//        intentSwitch.setAction(MUSIC_NOTIFICATION_ACTION_SWITCH)
+//        val intentNext = Intent(this,MusicServiceOnBind::class.java)
+//        intentNext.setAction(MUSIC_NOTIFICATION_ACTION_NEXT)
+//
+//        //PendingIntent.FLAG_MUTABLE:Intent的对象是可变的
+//        val pIntentLast = PendingIntent.getService(this, REQUEST_CODE,intentLast,PendingIntent.FLAG_MUTABLE)
+//        val pIntentSwitch = PendingIntent.getService(this, REQUEST_CODE,intentSwitch,PendingIntent.FLAG_MUTABLE)
+//        val pIntentNext = PendingIntent.getService(this, REQUEST_CODE,intentNext,PendingIntent.FLAG_MUTABLE)
+//
+//        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+//
+//
+//    }
 
 }

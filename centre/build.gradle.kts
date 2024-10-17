@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.junit)
     implementation(libs.banner)
     debugImplementation(libs.leakcanary.android)
+    implementation(libs.androidx.percentlayout)
 
 
     implementation(libs.androidx.core.ktx)

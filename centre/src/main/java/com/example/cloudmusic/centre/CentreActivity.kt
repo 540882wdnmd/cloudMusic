@@ -3,6 +3,7 @@ package com.example.cloudmusic.centre
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -10,19 +11,14 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.constraintlayout.widget.ConstraintSet.Constraint
-import androidx.constraintlayout.widget.ConstraintSet.Layout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -31,19 +27,17 @@ import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.example.cloudmusic.centre.bottomSheet.BottomSheetFragment
 import com.example.cloudmusic.centre.databinding.ActivityCentreBinding
+import com.example.cloudmusic.utils.MediaPlayerManager
 import com.example.cloudmusic.utils.TAG
 import com.example.cloudmusic.utils.base.BaseApplication
-import com.example.cloudmusic.utils.base.BaseApplication.Companion
 import com.example.cloudmusic.utils.base.BaseApplication.Companion.appContext
-import com.example.cloudmusic.utils.base.BaseApplication.Companion.mediaPlayer
 import com.example.cloudmusic.utils.hideKeyboard
 import com.example.cloudmusic.utils.service.MusicServiceOnBind
-import com.example.cloudmusic.utils.webs.bean.response.Song
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.lang.ref.WeakReference
 
 class CentreActivity : AppCompatActivity() {
 
+    private lateinit var mediaPlayer: MediaPlayer
     private lateinit var simpleViewPic : ImageView
     private lateinit var simpleViewName : TextView
     private lateinit var simpleViewSwitch : ImageButton
@@ -58,19 +52,22 @@ class CentreActivity : AppCompatActivity() {
 
     private lateinit var mBinder : MusicServiceOnBind.MusicBind
 
+    init {
+        Log.d(TAG,"init")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG,"执行onCreate")
-        BaseApplication.activity = WeakReference(this)
 
         binding  = ActivityCentreBinding.inflate(layoutInflater)
         setContentView(binding.root)//绑定布局
 
+        mediaPlayer = MediaPlayerManager.getMediaPlayer()
+        startService()
         setDrawerLayout()
         setBottomNav()
         setSimpleView()
-        startService()
 
     }
 
@@ -80,6 +77,11 @@ class CentreActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
+        if (mediaPlayer.isPlaying){
+            simpleViewSwitch.setImageResource(R.drawable.ico_music_pause)
+        }else{
+            simpleViewSwitch.setImageResource(R.drawable.ico_music_start_black)
+        }
         Log.d(TAG,"执行onResume")
     }
     override fun onPause() {
@@ -102,7 +104,7 @@ class CentreActivity : AppCompatActivity() {
             mediaPlayer.pause()
         }
         mediaPlayer.stop()
-        mediaPlayer.release()
+        MediaPlayerManager.releaseMediaPlayer()
         Log.d(TAG,"执行onDestroy")
     }
 
@@ -223,7 +225,7 @@ class CentreActivity : AppCompatActivity() {
                 return
             }
         }
-        val intent = Intent(appContext,MusicServiceOnBind::class.java)
+        val intent = Intent(appContext, MusicServiceOnBind::class.java)
         this@CentreActivity.bindService(intent,serviceConnection, BIND_AUTO_CREATE)
     }
 
