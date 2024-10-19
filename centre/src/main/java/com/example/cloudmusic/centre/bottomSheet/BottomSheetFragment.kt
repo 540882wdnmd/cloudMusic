@@ -2,6 +2,7 @@ package com.example.cloudmusic.centre.bottomSheet
 
 import android.app.Dialog
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,12 +13,14 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
+import com.example.cloudmusic.centre.MusicBinderManager
 import com.example.cloudmusic.centre.R
 import com.example.cloudmusic.centre.databinding.FragmentBottomSheetBinding
 import com.example.cloudmusic.utils.MediaPlayerManager
-import com.example.cloudmusic.utils.base.BaseApplication.Companion.mBinder
 import com.example.cloudmusic.utils.convertTimeFormat
+import com.example.cloudmusic.utils.songArtistString
 import com.example.cloudmusic.utils.webs.bean.response.Artist
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -28,6 +31,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
     private val TAG = "BottomSheetFragment"
 
+    private val mBinder = MusicBinderManager.getMusicBinder()
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var dialog: Dialog
     private lateinit var binding : FragmentBottomSheetBinding
@@ -66,6 +70,11 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
         Log.d(TAG,"执行onCreate方法")
     }
 
+    override fun onPause() {
+        super.onPause()
+        mBinder.getPlayingSongData()
+    }
+
     override fun onStart() {
         Log.d(TAG,"执行onStart方法")
         super.onStart()
@@ -91,7 +100,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser){
                     mediaPlayer.seekTo(progress)
-                    durationPlayed.text = mediaPlayer.convertTimeFormat(mediaPlayer.currentPosition)
+                    durationPlayed.text = convertTimeFormat(mediaPlayer.currentPosition)
                 }
             }
 
@@ -106,7 +115,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
             override fun run() {
                 seekBar.progress = mediaPlayer.currentPosition
                 Handler(Looper.getMainLooper()).post{
-                    durationPlayed.text = mediaPlayer.convertTimeFormat(mediaPlayer.currentPosition)
+                    durationPlayed.text = convertTimeFormat(mediaPlayer.currentPosition)
                 }
             }
         },0, 500)
@@ -135,24 +144,17 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
                 .into(songPic)
             songName.text = it.name
             songArtist.text = songArtistString(it.ar)
-            durationSong.text = mediaPlayer.convertTimeFormat(mediaPlayer.duration)
-            durationPlayed.text = mediaPlayer.convertTimeFormat(mediaPlayer.currentPosition)
+            durationSong.text = convertTimeFormat(mediaPlayer.duration)
+            durationPlayed.text = convertTimeFormat(mediaPlayer.currentPosition)
             if (mediaPlayer.isPlaying){
                 switchButton.setBackgroundResource(R.drawable.ico_music_pause)
             }else{
                 switchButton.setBackgroundResource(R.drawable.ico_music_start_black)
             }
+            mBinder.changeSong(it)
         }
         mBinder.getPlayingSongData()
     }
 
-    private fun songArtistString(arList : List<Artist>) : String{
-        val builder : StringBuilder = StringBuilder()
-        for (ar in arList){
-            builder.append(ar.name).append("/")
-        }
-        builder.deleteCharAt(builder.length-1)
-        return builder.toString()
-    }
 
 }

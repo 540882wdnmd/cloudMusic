@@ -1,9 +1,12 @@
 package com.example.cloudmusic.centre
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -14,6 +17,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -27,12 +31,12 @@ import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.example.cloudmusic.centre.bottomSheet.BottomSheetFragment
 import com.example.cloudmusic.centre.databinding.ActivityCentreBinding
+import com.example.cloudmusic.utils.BroadcastMsg
 import com.example.cloudmusic.utils.MediaPlayerManager
 import com.example.cloudmusic.utils.TAG
 import com.example.cloudmusic.utils.base.BaseApplication
 import com.example.cloudmusic.utils.base.BaseApplication.Companion.appContext
 import com.example.cloudmusic.utils.hideKeyboard
-import com.example.cloudmusic.utils.service.MusicServiceOnBind
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class CentreActivity : AppCompatActivity() {
@@ -49,6 +53,7 @@ class CentreActivity : AppCompatActivity() {
     private lateinit var toolbarMain: Toolbar
     private lateinit var bottomNavView : BottomNavigationView
     private lateinit var navController : NavController
+    private lateinit var serviceConnection : ServiceConnection
 
     private lateinit var mBinder : MusicServiceOnBind.MusicBind
 
@@ -105,6 +110,7 @@ class CentreActivity : AppCompatActivity() {
         }
         mediaPlayer.stop()
         MediaPlayerManager.releaseMediaPlayer()
+        unbindService(serviceConnection)
         Log.d(TAG,"执行onDestroy")
     }
 
@@ -208,17 +214,19 @@ class CentreActivity : AppCompatActivity() {
             }else{
                 simpleViewSwitch.setImageResource(R.drawable.ico_music_start_black)
             }
+            mBinder.changeSong(it)
             Log.d(TAG, "UI设置成功")
         }
         mBinder.getPlayingSongData()
     }
 
     private fun startService(){
-        val serviceConnection = object :ServiceConnection{
+        serviceConnection = object :ServiceConnection{
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 Log.d(TAG,"onServiceConnected")
-                BaseApplication.mBinder = service as MusicServiceOnBind.MusicBind
-                mBinder = BaseApplication.mBinder
+                MusicBinderManager.init(service)
+                mBinder = MusicBinderManager.getMusicBinder()
+                registerBroadcastReceiver()
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
@@ -227,9 +235,20 @@ class CentreActivity : AppCompatActivity() {
         }
         val intent = Intent(appContext, MusicServiceOnBind::class.java)
         this@CentreActivity.bindService(intent,serviceConnection, BIND_AUTO_CREATE)
+        this@CentreActivity.startService(intent)
     }
 
-    private fun showBottomSheetFragment(){
-
+    private fun registerBroadcastReceiver(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            BroadcastMsg.apply {
+                val filter = IntentFilter().apply {
+                    addAction(PLAY)
+                    addAction(PAUSE)
+                    addAction(NEXT)
+                    addAction(LAST)
+                }
+                registerReceiver(mBinder.receiver, filter, RECEIVER_NOT_EXPORTED)
+            }
     }
+
 }

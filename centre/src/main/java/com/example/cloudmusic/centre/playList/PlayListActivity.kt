@@ -1,14 +1,17 @@
 package com.example.cloudmusic.centre.playList
 
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cloudmusic.centre.MusicBinderManager
 import com.example.cloudmusic.centre.databinding.ActivityPlayListBinding
 import com.example.cloudmusic.utils.MediaPlayerManager
 import com.example.cloudmusic.utils.PERSONALIZED_ID
@@ -25,7 +28,7 @@ class PlayListActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var mediaPlayer: MediaPlayer
 
-    private val mBinder = BaseApplication.mBinder
+    private val mBinder = MusicBinderManager.getMusicBinder()
     private lateinit var playListID : String
     private var songIds = StringBuilder()
     private val musicUrls = ArrayList<String>()
@@ -121,7 +124,7 @@ class PlayListActivity : AppCompatActivity() {
     }
 
     private fun serviceLogic(position: Int){
-        mBinder.musicUrlList.observe(this@PlayListActivity){
+        mBinder.musicUrlList.observe(this){
             Log.d(TAG,"服务中的musicUrl发生变化")
             with(mediaPlayer){
                 if (this.isPlaying){
@@ -131,6 +134,9 @@ class PlayListActivity : AppCompatActivity() {
                 reset()
             }
             mBinder.start()
+        }
+        mBinder.playingSongData.observe(this){
+            mBinder.changeSong(it)
         }
         mBinder.updatePlayList(musicUrls.toList(),position)
         mBinder.sendPlayListData(songList)

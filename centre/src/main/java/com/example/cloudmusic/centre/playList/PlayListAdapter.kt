@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cloudmusic.centre.R
 import com.example.cloudmusic.centre.databinding.ItemPlayListBinding
+import com.example.cloudmusic.utils.songArtistString
 import com.example.cloudmusic.utils.webs.bean.response.Artist
 import com.example.cloudmusic.utils.webs.bean.response.Song
 
@@ -66,13 +67,6 @@ class PlayListAdapter(beanData : List<Song>?) : RecyclerView.Adapter<PlayListAda
         notifyDataSetChanged()
     }
 
-    private fun songArtistString(arList : List<Artist>) : String{
-        val builder : StringBuilder = StringBuilder()
-        for (ar in arList){
-            builder.append(ar.name).append("/")
-        }
-        builder.deleteCharAt(builder.length-1)
-        return builder.toString()
-    }
+
 
 }

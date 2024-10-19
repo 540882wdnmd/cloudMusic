@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
+
     <application
         android:allowBackup="true"
         android:name=".utils.base.BaseApplication"
@@ -22,9 +23,10 @@
         android:testOnly="false">
 
         <service
-            android:name=".utils.service.MusicServiceOnBind"
+            android:name=".centre.MusicServiceOnBind"
+            android:foregroundServiceType="mediaPlayback"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
 
         <activity
             android:configChanges="orientation|screenSize|keyboardHidden"

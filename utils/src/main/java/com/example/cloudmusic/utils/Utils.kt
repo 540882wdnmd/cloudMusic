@@ -11,8 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import com.example.cloudmusic.utils.datastore.getStringData
-import com.example.cloudmusic.utils.datastore.preferenceCookie
+import com.example.cloudmusic.utils.webs.bean.response.Artist
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
@@ -28,7 +27,7 @@ const val DAY_TIME = 24 * HOUR_TIME
 /**
  * MediaPlayer转换时间格式
  */
-fun MediaPlayer.convertTimeFormat(duration : Int) : String{
+fun convertTimeFormat(duration : Int) : String{
     val minuteTime = duration/ MINUTE_TIME
     val secondTime = (duration % MINUTE_TIME) / SECOND_TIME
     val stringBuilder = StringBuilder()
@@ -142,10 +141,18 @@ fun isShouldHideInput(view: View,event:MotionEvent):Boolean{
 /**
  * 获取Cookie
  */
-fun getCookie() = runBlocking {
-    getStringData(preferenceCookie)
-}
+
 
 /**
- * 配置后台播放音乐服务
+ * 用'/'隔开字符
  */
+
+fun songArtistString(arList : List<Artist>) : String{
+    val builder : StringBuilder = StringBuilder()
+    for (ar in arList){
+        builder.append(ar.name).append("/")
+    }
+    builder.deleteCharAt(builder.length-1)
+    return builder.toString()
+}
+
