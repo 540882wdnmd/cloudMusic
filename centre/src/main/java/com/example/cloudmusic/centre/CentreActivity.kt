@@ -1,5 +1,6 @@
 package com.example.cloudmusic.centre
 
+import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -56,6 +57,7 @@ class CentreActivity : AppCompatActivity() {
     private lateinit var serviceConnection : ServiceConnection
 
     private lateinit var mBinder : MusicServiceOnBind.MusicBind
+    private lateinit var receiver: MusicBroadcastReceiver
 
     init {
         Log.d(TAG,"init")
@@ -87,6 +89,7 @@ class CentreActivity : AppCompatActivity() {
         }else{
             simpleViewSwitch.setImageResource(R.drawable.ico_music_start_black)
         }
+
         Log.d(TAG,"执行onResume")
     }
     override fun onPause() {
@@ -111,6 +114,7 @@ class CentreActivity : AppCompatActivity() {
         mediaPlayer.stop()
         MediaPlayerManager.releaseMediaPlayer()
         unbindService(serviceConnection)
+        unregisterReceiver(receiver)
         Log.d(TAG,"执行onDestroy")
     }
 
@@ -203,7 +207,7 @@ class CentreActivity : AppCompatActivity() {
 
     private fun serviceLogic() {
         Log.d(TAG, "执行serviceLogic方法")
-        mBinder.playingSongData.observe(this@CentreActivity) {
+        mBinder.playingSongData.observe(this) {
             Log.d(TAG, "歌曲发生变化")
             simpleViewName.text = it.name
             Glide.with(this@CentreActivity)
@@ -235,11 +239,12 @@ class CentreActivity : AppCompatActivity() {
         }
         val intent = Intent(appContext, MusicServiceOnBind::class.java)
         this@CentreActivity.bindService(intent,serviceConnection, BIND_AUTO_CREATE)
-        this@CentreActivity.startService(intent)
     }
 
+    //注册广播接受器
     private fun registerBroadcastReceiver(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        receiver = MusicBroadcastReceiver()
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
             BroadcastMsg.apply {
                 val filter = IntentFilter().apply {
                     addAction(PLAY)
@@ -247,8 +252,25 @@ class CentreActivity : AppCompatActivity() {
                     addAction(NEXT)
                     addAction(LAST)
                 }
-                registerReceiver(mBinder.receiver, filter, RECEIVER_NOT_EXPORTED)
+                registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
+                Log.d(TAG,"已注册广播接收器")
             }
+        }
+    }
+
+    private class MusicBroadcastReceiver : BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent) {
+            val binder = MusicBinderManager.getMusicBinder()
+            BroadcastMsg.apply {
+                when(intent.action) {
+                    PLAY -> binder.play()
+                    PAUSE ->binder.pause()
+                    LAST -> binder.playLast()
+                    NEXT -> binder.playNext()
+                }
+            }
+            binder.getPlayingSongData()
+        }
     }
 
 }

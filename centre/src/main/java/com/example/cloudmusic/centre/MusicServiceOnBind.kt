@@ -47,7 +47,6 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         const val MUSIC_NOTIFICATION_ACTION_NEXT = "MusicNotificationToNEXT"
         const val MUSIC_NOTIFICATION_ACTION_SWITCH = "MusicNotificationToSwitch"
         const val NOTIFICATION_CHANNEL_NAME = "MusicChannel"
-        const val REQUEST_CODE = 3000
         const val CHANNEL_ID = "cloud.music"
         const val NOTIFICATION_ID = 10001
     }
@@ -85,6 +84,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         Log.d(TAG,"执行onStartCommend")
         when(intent.action){
             MUSIC_NOTIFICATION_ACTION_SWITCH->{
+                Log.d(TAG,MUSIC_NOTIFICATION_ACTION_SWITCH)
                 if (mediaPlayer.isPlaying){
                     sendBroadcast(BroadcastMsg.PAUSE)
                 }else{
@@ -93,10 +93,12 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
             }
 
             MUSIC_NOTIFICATION_ACTION_LAST->{
+                Log.d(TAG, MUSIC_NOTIFICATION_ACTION_LAST)
                 sendBroadcast(BroadcastMsg.LAST)
             }
 
             MUSIC_NOTIFICATION_ACTION_NEXT->{
+                Log.d(TAG, MUSIC_NOTIFICATION_ACTION_NEXT)
                 sendBroadcast(BroadcastMsg.NEXT)
             }
         }
@@ -119,7 +121,6 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     }
 
     inner class MusicBind : Binder(){
-        val receiver = musicBroadcastReceiver
         val musicUrlList : LiveData<List<String>?>
             get() = _musicUrlList
         val playingSongData : LiveData<Song>
@@ -132,8 +133,8 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
         fun updatePlayList(newList: List<String>,position: Int) = this@MusicServiceOnBind.updatePlayList(newList,position)
         fun sendPlayListData(data : List<Song>) = this@MusicServiceOnBind.sendPlayListData(data)
         fun getPlayingSongData() = this@MusicServiceOnBind.getPlayingSongData()
-        @RequiresApi(Build.VERSION_CODES.O)
         fun changeSong(song : Song?) = this@MusicServiceOnBind.changeSong(song)
+        fun setRemoteViewSwitch(isPlay : Boolean) = this@MusicServiceOnBind.setRemoteViewSwitch(isPlay)
     }
 
     private fun start(){
@@ -282,7 +283,6 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotification() : Notification {
         val intentLast = Intent(this, MusicServiceOnBind::class.java)
         intentLast.setAction(MUSIC_NOTIFICATION_ACTION_LAST)
@@ -320,22 +320,11 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
 
     private fun sendBroadcast(action: String){
         val intent = Intent(action)
-        sendBroadcast(intent)
+        intent.setPackage(packageName)
+        this.sendBroadcast(intent)
     }
 
-    val musicBroadcastReceiver = object : BroadcastReceiver(){
-        override fun onReceive(context: Context?, intent: Intent) {
-            BroadcastMsg.apply {
-                when(intent.action){
-                    PLAY-> play()
-                    PAUSE->pause()
-                    LAST->playLast()
-                    NEXT->playNext()
-                }
-            }
-        }
 
-    }
 
     private fun changeSong(song: Song?){
         if (song!=null){
@@ -353,7 +342,7 @@ class MusicServiceOnBind : Service() , MediaPlayer.OnCompletionListener {
                         remoteViews.setImageViewBitmap(R.id.notification_img,resource)
                         remoteViews.setTextViewText(R.id.notification_music_name,song.name)
                         remoteViews.setTextViewText(R.id.notification_artist, songArtistString(song.ar))
-                        remoteViews.setImageViewResource(R.id.notification_switch,R.drawable.ico_music_pause)
+                        setRemoteViewSwitch(mediaPlayer.isPlaying)
                         updateRemoteView()
                     }
 

@@ -89,11 +89,7 @@ class PlayListActivity : AppCompatActivity() {
             if (it!=null){
                 if (it.code==200){
                     playListAdapter.updateData(it.songs)
-                    for (song in it.songs) {
-                        songIds.append(song.id).append(",")
-                        songList.add(song)
-                    }
-                    songIds.deleteCharAt(songIds.length-1)
+                    songsToString(it.songs)
                     Log.d(TAG, "歌单歌曲的所有ID:$songIds")
                     playListViewModel.getMusicUrl(songIds.toString())
                 }else if(it.code == 400){
@@ -137,11 +133,19 @@ class PlayListActivity : AppCompatActivity() {
         }
         mBinder.playingSongData.observe(this){
             mBinder.changeSong(it)
+            mBinder.setRemoteViewSwitch(mediaPlayer.isPlaying)
         }
         mBinder.updatePlayList(musicUrls.toList(),position)
         mBinder.sendPlayListData(songList)
     }
 
 
+    private fun songsToString(songs : List<Song>){
+        for (song in songs) {
+            songIds.append(song.id).append(",")
+            songList.add(song)
+        }
+        songIds.deleteCharAt(songIds.length-1)
+    }
 
 }
